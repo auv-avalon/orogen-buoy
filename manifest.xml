@@ -13,4 +13,9 @@
   <depend package="dummy-dependency-n-1" />
   <depend package="dummy-dependency-n" />
   -->
+  <depend package="avalon/visual_detectors"/>
+  <depend package="eigen3" />
+  <depend package="opencv" />
+
+  <tags>needs_opt</tags>
 </package>

@@ -3,7 +3,15 @@
 #ifndef BUOY_DETECTOR_TASK_HPP
 #define BUOY_DETECTOR_TASK_HPP
 
+#include "opencv/cv.h"
+#include "opencv/highgui.h"
 #include "buoy/DetectorBase.hpp"
+#include "visual_detectors/buoy_detector.h"
+#include "visual_detectors/buoy_estimation_filter.h"
+#include "visual_detectors/buoy_paradise_filter.h"
+#include "visual_detectors/buoy_pos_estimation.h"
+#include "visual_detectors/command_creation.h"
+#include <base/pose.h>
 
 namespace buoy {
 
@@ -25,7 +33,25 @@ namespace buoy {
     {
 	friend class DetectorBase;
     protected:
-
+	avalon::HSVColorBuoyDetector detector;
+	avalon::BuoyPosEstimator posestimator;
+        avalon::BuoyParadiseFilter filter;
+        avalon::CommandCreator commander;
+    	base::samples::frame::Frame frame;
+   //     std::vector<base::AUVPositionCommand> last_command;
+        IplImage image;
+        States previous_state;
+        States current_state;
+        RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> fp;//to read inputframes
+        base::samples::RigidBodyState ot;//to get aktuell RBS
+        base::samples::RigidBodyState servoing_rbs; //start-RBS of buoy-servoing
+        bool started_servoing;
+        bool started_cutting;
+        bool strafed_over_180_degrees;
+	bool new_state;
+	
+	base::Time cutting_start;
+	base::Time re_search_start;
 
 
     public:
@@ -60,14 +86,14 @@ namespace buoy {
          end
          \endverbatim
          */
-        // bool configureHook();
+        bool configureHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Stopped to Running. If it returns false, then the component will
          * stay in Stopped. Otherwise, it goes into Running and updateHook()
          * will be called.
          */
-        // bool startHook();
+        bool startHook();
 
         /** This hook is called by Orocos when the component is in the Running
          * state, at each activity step. Here, the activity gives the "ticks"
@@ -83,7 +109,7 @@ namespace buoy {
          * component is stopped and recover() needs to be called before starting
          * it again. Finally, FatalError cannot be recovered.
          */
-        // void updateHook();
+        void updateHook();
 
         /** This hook is called by Orocos when the component is in the
          * RunTimeError state, at each activity step. See the discussion in
@@ -102,7 +128,12 @@ namespace buoy {
          * from Stopped to PreOperational, requiring the call to configureHook()
          * before calling start() again.
          */
-        // void cleanupHook();
+        void cleanupHook();
+
+
+	bool did180degrees();
+
+        base::AUVPositionCommand createPositionCommand(avalon::feature::Buoy buoys);
     };
 }
 
