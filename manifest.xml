@@ -1,0 +1,16 @@
+<package>
+  <description brief="contrains buoy-tasks for sauc-e 2011 and 2012">
+  
+  </description>
+  <author>Thomas Grassow/deshalb@tzi.de</author>
+  <license></license>
+  <url>http://</url>
+  <logo>http://</logo>
+  <!--
+   To add any dependencies use the depend tag
+  <depend package="dummy-dependency-0" />
+	...
+  <depend package="dummy-dependency-n-1" />
+  <depend package="dummy-dependency-n" />
+  -->
+</package>
