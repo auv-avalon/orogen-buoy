@@ -27,75 +27,36 @@ task_context "Survey" do
    # --------------------------------------------------------------------------
    # I n p u t s 
    # --------------------------------------------------------------------------
-   input_port("frame", ro_ptr("base::samples::frame::Frame")).
-        doc("current frame given from a camera on which a buoy should be detected")
    input_port("orientation_samples", "base::samples::RigidBodyState").
 		doc 'Vehicle orientation with depth'
    input_port("force_cutting", "bool").
 		doc("if true the task will direktly go tu STRAFE_FINISHED-state")
+   input_port("input_buoy", "/avalon/feature/Buoy").
+        doc("feature data of a buoy with the highest probability in frame")
 
    # --------------------------------------------------------------------------
    # O u t p u t s
    # --------------------------------------------------------------------------
-   output_port("buoy", "/avalon/feature/Buoy").
-        doc("feature data of a buoy with the highest probability in frame")
-
-   output_port("relative_position", "/base/AUVPositionCommand").
-        doc("relative position of the buoy in frame")
-
    output_port("strafed_angle", "double").
 	doc("the angle that was strafed in pi...")
 
+   output_port("relative_position", "/base/AUVPositionCommand").
+        doc("relative position of the buoy in frame")
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
- #  property("hue_low", "int",  56).
- #       doc("set low hue value to recude color space")
-
-#   property("hue_high", "int", 200).
-#        doc("set high hue value to reduce color space")
 
    property("max_buoy_distance", "double", 2.0).
         doc("maximum buoy distance in m")
-
-   property("buoy_radius", "double", 0.05).  #bei boye mit d=25cm ist wert von 0.05 realistisch. wieso?
-        doc("radius of the buoy in m")
-
-   property("houghTh", "int", 25).
-        doc("Hough threshold.")
-
-   property("hValue", "int", 55).
-        doc("Buoy hue value.")
  
    property("strafe_intensity", "double", -0.8).
         doc("intensity and direction of strafing (negative is right).");
 
-   property("vValue", "int", 40).
-        doc("Buoy hue value.")
-
-   property("sValue", "int", 95).
-        doc("Buoy saturation value.")
-
    property("steps", "int", 5).
         doc("Step size to detect V value.")
-  
-   property("edgeTh", "int", 35).
-        doc("Buoy V value.")
-
-   property("run_in_simulation", "bool", 0).
-        doc("shows if the task runs in simulation or not.")
-
-   property("debug_gui", "bool", true).
-        doc("Sets test mode.")
-
-   property("buoy_timeout", "int", 20).
-        doc("number of frames a buoy is not detected in order to set BUOY_LOST")
 
    property("lost_timeout", "int", 20).
         doc("timeout how long it takes to change state from RE_SEARCHING_BUOY to BUOY_LOST.")
-
-   property("filter_timeout", "double", 1.5).
-        doc("the time in s how long a buoy of the past is noticed by the filter.")
 
    property("good_y_z", "double", 0.2).
         doc("for detecting if the buoy is in a good position to strafe.")
@@ -128,7 +89,6 @@ task_context "Survey" do
    property("cutting_wait_time", "int", 60)
 	doc("time in seconds to wait in moving_to_cutting_distance before cutting.")
 
-   port_driven("frame")
 end
 
 task_context "Detector" do
@@ -136,19 +96,13 @@ task_context "Detector" do
    # BUOY_DETECTED:   found a buoy within a sequence of frames
    # BUOY_LOST:       lost the buoy over a sequence of frames
    # --------------------------------------------------------------------------
-   states("BUOY_SEARCH", "BUOY_DETECTED", "BUOY_LOST", "RE_SEARCHING_BUOY", "BUOY_ARRIVED", "STRAFING", 
-        "STRAFE_FINISHED", "STRAFE_ERROR", "MOVING_TO_CUTTING_DISTANCE", "CUTTING",
-        "CUTTING_SUCCESS", "CUTTING_ERROR")
+   states("BUOY_FOUND", "NO_BUOY_FOUND")
 
    # --------------------------------------------------------------------------
    # I n p u t s 
    # --------------------------------------------------------------------------
    input_port("frame", ro_ptr("base::samples::frame::Frame")).
         doc("current frame given from a camera on which a buoy should be detected")
-   input_port("orientation_samples", "base::samples::RigidBodyState").
-		doc 'Vehicle orientation with depth'
-   input_port("force_cutting", "bool").
-		doc("if true the task will direktly go tu STRAFE_FINISHED-state")
 
    # --------------------------------------------------------------------------
    # O u t p u t s
@@ -156,23 +110,11 @@ task_context "Detector" do
    output_port("buoy", "/avalon/feature/Buoy").
         doc("feature data of a buoy with the highest probability in frame")
 
-   output_port("relative_position", "/base/AUVPositionCommand").
-        doc("relative position of the buoy in frame")
 
-   output_port("strafed_angle", "double").
-	doc("the angle that was strafed in pi...")
 
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
- #  property("hue_low", "int",  56).
- #       doc("set low hue value to recude color space")
-
-#   property("hue_high", "int", 200).
-#        doc("set high hue value to reduce color space")
-
-   property("max_buoy_distance", "double", 2.0).
-        doc("maximum buoy distance in m")
 
    property("buoy_radius", "double", 0.05).  #bei boye mit d=25cm ist wert von 0.05 realistisch. wieso?
         doc("radius of the buoy in m")
@@ -182,9 +124,6 @@ task_context "Detector" do
 
    property("hValue", "int", 55).
         doc("Buoy hue value.")
- 
-   property("strafe_intensity", "double", -0.8).
-        doc("intensity and direction of strafing (negative is right).");
 
    property("vValue", "int", 40).
         doc("Buoy hue value.")
@@ -198,51 +137,14 @@ task_context "Detector" do
    property("edgeTh", "int", 35).
         doc("Buoy V value.")
 
-   property("run_in_simulation", "bool", 0).
-        doc("shows if the task runs in simulation or not.")
-
    property("debug_gui", "bool", true).
         doc("Sets test mode.")
 
    property("buoy_timeout", "int", 20).
         doc("number of frames a buoy is not detected in order to set BUOY_LOST")
 
-   property("lost_timeout", "int", 20).
-        doc("timeout how long it takes to change state from RE_SEARCHING_BUOY to BUOY_LOST.")
-
    property("filter_timeout", "double", 1.5).
         doc("the time in s how long a buoy of the past is noticed by the filter.")
-
-   property("good_y_z", "double", 0.2).
-        doc("for detecting if the buoy is in a good position to strafe.")
-   
-   property("good_x", "double", 0.3).
-        doc("for detecting if the buoy is in a good position to strafe.")
-
-   property("buoy_depth", "double", -1.0).
-        doc("the absolute high of the buoy in the water.")
-
-   property("headingFactor", "double", 1.0).
-        doc("factor multiplied for heading")
-
-   property("headingModulation", "double", 0.0).
-        doc("pre-heading for strafing")
-
-   property("maxX", "double", 0.2).
-        doc("maximum x value for strafing")
-   property("cutting_time", "int", 53).
-        doc("time for the cutting-action in seconds.")
-   property("cutting_hight", "double", -0.25)
-        doc("how much higher should he go to cut the buoy.")
-
-   property("strafe_angle", "double", 0.95)
-	doc("the angle that is to strafe around the buoy and bagwards. it has to be 0<x<1, where the angle is x*pi where 1*pi=180°.")
-
-   property("strafe_around", "bool", 0)
-	doc("if it is true the strafe_angle will be ignored and the auv will strafe in a hole cycle around the buoy.") 
-
-   property("cutting_wait_time", "int", 60)
-	doc("time in seconds to wait in moving_to_cutting_distance before cutting.")
 
    port_driven("frame")
 end

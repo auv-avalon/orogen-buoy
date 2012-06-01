@@ -4,6 +4,8 @@
 #define BUOY_SURVEY_TASK_HPP
 
 #include "buoy/SurveyBase.hpp"
+#include "visual_detectors/command_creation.h"
+#include <base/pose.h>
 
 namespace buoy {
 
@@ -25,7 +27,17 @@ namespace buoy {
     {
 	friend class SurveyBase;
     protected:
-
+    	avalon::CommandCreator commander;
+    	States previous_state;
+    	States current_state;
+    	base::samples::RigidBodyState ot;//to get aktuell RBS
+    	base::samples::RigidBodyState servoing_rbs; //start-RBS of buoy-servoing
+    	bool started_servoing;
+    	bool started_cutting;
+    	bool strafed_over_180_degrees;
+		bool new_state;
+		base::Time cutting_start;
+		base::Time re_search_start;
 
 
     public:
@@ -60,14 +72,14 @@ namespace buoy {
          end
          \endverbatim
          */
-        // bool configureHook();
+        bool configureHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Stopped to Running. If it returns false, then the component will
          * stay in Stopped. Otherwise, it goes into Running and updateHook()
          * will be called.
          */
-        // bool startHook();
+         bool startHook();
 
         /** This hook is called by Orocos when the component is in the Running
          * state, at each activity step. Here, the activity gives the "ticks"
@@ -83,7 +95,7 @@ namespace buoy {
          * component is stopped and recover() needs to be called before starting
          * it again. Finally, FatalError cannot be recovered.
          */
-        // void updateHook();
+        void updateHook();
 
         /** This hook is called by Orocos when the component is in the
          * RunTimeError state, at each activity step. See the discussion in
@@ -102,7 +114,22 @@ namespace buoy {
          * from Stopped to PreOperational, requiring the call to configureHook()
          * before calling start() again.
          */
-        // void cleanupHook();
+        void cleanupHook();
+
+	bool did180degrees();
+
+        base::AUVPositionCommand createPositionCommand(avalon::feature::Buoy buoys);
+
+		base::AUVPositionCommand buoy_search(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand buoy_detected(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand researching_buoy(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand buoy_lost(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand buoy_arrived(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand strafing(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand strafe_finished(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand moving_to_cutting_distance(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand cutting(avalon::feature::Buoy buoy, bool buoyfound);
+		base::AUVPositionCommand cutting_success(avalon::feature::Buoy buoy, bool buoyfound);
     };
 }
 

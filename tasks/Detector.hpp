@@ -33,25 +33,14 @@ namespace buoy {
     {
 	friend class DetectorBase;
     protected:
-	avalon::HSVColorBuoyDetector detector;
-	avalon::BuoyPosEstimator posestimator;
-        avalon::BuoyParadiseFilter filter;
-        avalon::CommandCreator commander;
+		avalon::HSVColorBuoyDetector detector;
+		avalon::BuoyPosEstimator posestimator;
+    	avalon::BuoyParadiseFilter filter;
     	base::samples::frame::Frame frame;
-   //     std::vector<base::AUVPositionCommand> last_command;
-        IplImage image;
-        States previous_state;
-        States current_state;
-        RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> fp;//to read inputframes
-        base::samples::RigidBodyState ot;//to get aktuell RBS
-        base::samples::RigidBodyState servoing_rbs; //start-RBS of buoy-servoing
-        bool started_servoing;
-        bool started_cutting;
-        bool strafed_over_180_degrees;
-	bool new_state;
-	
-	base::Time cutting_start;
-	base::Time re_search_start;
+    	IplImage image;
+    	States previous_state;
+    	States current_state;
+    	RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> fp;//to read inputframes
 
 
     public:
@@ -131,9 +120,7 @@ namespace buoy {
         void cleanupHook();
 
 
-	bool did180degrees();
 
-        base::AUVPositionCommand createPositionCommand(avalon::feature::Buoy buoys);
     };
 }
 
