@@ -34,6 +34,9 @@ task_context "Survey" do
    input_port("input_buoy", "/avalon/feature/Buoy").
         doc("feature data of a buoy with the highest probability in frame")
 
+   input_port("motion_command", "/base/AUVMotionCommand").
+        doc("motion command submitted by nurc for surveying a specific yaw/z to buoy")
+
    # --------------------------------------------------------------------------
    # O u t p u t s
    # --------------------------------------------------------------------------
@@ -42,6 +45,10 @@ task_context "Survey" do
 
    output_port("relative_position", "/base/AUVPositionCommand").
         doc("relative position of the buoy in frame")
+
+   output_port("position", "/base/samples/RigidBodyState").
+        doc("outputs current yaw and z-depth during buoy survey")
+
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
@@ -110,7 +117,8 @@ task_context "Detector" do
    output_port("buoy", "/avalon/feature/Buoy").
         doc("feature data of a buoy with the highest probability in frame")
 
-
+   output_port("light", "bool").
+        doc("sent true if a light has been detected onto a buoy")
 
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
