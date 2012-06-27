@@ -16,7 +16,6 @@ int buoys_buffer_size=5,buoys_buffer_size_min=3,startvalidation=100,mindist=100,
 int vValue = 0;
 int hValue = 0;
 int sValue = 0;
-bool debug_gui = true;
 
 using namespace avalon;
 using namespace buoy;
@@ -106,23 +105,6 @@ bool Detector::startHook()
     filter.setMindist(mindist);
     filter.setMaxage(maxage,true);
 
-	if(_debug_gui){
-		cvNamedWindow(GUI_WINDOW_NAME, CV_WINDOW_NORMAL);
-		cvResizeWindow(GUI_WINDOW_NAME, 800, 600);
-		cvNamedWindow("Trackbars",CV_WINDOW_NORMAL);
-	
-	
-		cvCreateTrackbar("Hue Threshold", "Trackbars", &hValue, 255, on_change_Hvalue);
-		cvCreateTrackbar("Saturation Threshold", "Trackbars", &sValue, 255, on_change_Svalue);
-		cvCreateTrackbar("Hough Threshold", "Trackbars", &houghTh, 256, on_change_hough_th);
-		cvCreateTrackbar("Sobel Threshold", "Trackbars", &edgeTh, 256, on_change_edge_th);
-	
-		//cvCreateTrackbar("bufferSize", "Trackbars", &buoys_buffer_size, 30, on_change_bufferSize);
-		//cvCreateTrackbar("bufferSizeMin", "Trackbars", &buoys_buffer_size_min, 15, on_change_bufferSizeMin);
-		//cvCreateTrackbar("startValidation", "Trackbars", &startvalidation, 200, on_change_startVal);
-		//cvCreateTrackbar("mindist", "Trackbars", &mindist, 300, on_change_mindist);
-		cvCreateTrackbar("maxage in 10ms", "Trackbars", &maxage, 500, on_change_maxage);	
-	}
 	return true;
 }
 
@@ -146,38 +128,17 @@ void Detector::updateHook()
     }
 	bool testMode = false;
 
-    if(_debug_gui){
-		detector.configureHoughThreshold(houghTh);
-		detector.configureEdgeThreshold(edgeTh);
+	filter.setMaxage((double)_filter_timeout);
 
-		filter.setBufferSize(buoys_buffer_size);
-        filter.setMinSize(buoys_buffer_size_min);
-        filter.setStartval(startvalidation);
-        filter.setMindist(mindist);
-        filter.setMaxage(maxage,true);
-		testMode = true;
-    }else{
-		filter.setMaxage((double)_filter_timeout);
-	}
-
-	BuoyFeatureVector result = detector.buoyDetection(&image, hValue, sValue, _debug_gui);
+	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get(), false);
 	filter.feed(result);
 
-	if(_debug_gui){
-        for(unsigned int i=0;i<result.size();i++)
-        {
-            BuoyDetector::draw(&image, result[i], CV_RGB(0,0,255));
-        }
-	}
 
     BuoyFeatureVector vector = filter.process();
 		//wenn die boje gefunden wurde schreibe sie raus
     if (vector.size() > 0 && vector.front().validation>-1) {
         feature::Buoy& buoy=vector.front();
         //vector.front()=buoy;
-        if(_debug_gui){
-            BuoyDetector::draw(&image, buoy,CV_RGB(255, 0, 0));
-        }
         _buoy.write(buoy);
 		current_state = BUOY_FOUND;
     }else { //wenn keine boje gefunden wurde, schreibe eine neue mit negativem Radius
@@ -194,9 +155,5 @@ void Detector::updateHook()
 
 void Detector::cleanupHook() {
 	DetectorBase::cleanupHook();
-
-    if(_debug_gui){
-		cvDestroyWindow(GUI_WINDOW_NAME);
-    }
 }
 

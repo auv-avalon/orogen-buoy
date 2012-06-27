@@ -149,3 +149,10 @@ task_context "Detector" do
    port_driven("frame")
 end
 
+deployment "buoy_test" do
+  task "buoy_survey", "buoy::Survey"
+  task "buoy_detector", "buoy::Detector"
+
+  add_default_logger
+end
+

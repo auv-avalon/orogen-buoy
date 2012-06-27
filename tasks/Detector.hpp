@@ -4,7 +4,6 @@
 #define BUOY_DETECTOR_TASK_HPP
 
 #include "opencv/cv.h"
-#include "opencv/highgui.h"
 #include "buoy/DetectorBase.hpp"
 #include "visual_detectors/buoy_detector.h"
 #include "visual_detectors/buoy_estimation_filter.h"

@@ -8,19 +8,24 @@ Orocos::CORBA.name_service = "127.0.0.1"
 Orocos.initialize
 
 #Orocos.run "buoydetector" do 
-Orocos.run("buoydetector_test" => nil, :wait => 20) do
-  detector = TaskContext.get "buoydetector_test"
-  #camera = Orocos::TaskContext.get "front_camera"
-  camera = TaskContext.get 'front_camera_simulation'
+Orocos.run("buoy_test" => nil, :wait => 20) do
+  survey = Orocos::TaskContext.get "buoy_survey"
+  detector = Orocos::TaskContext.get "buoy_detector"
+  camera = TaskContext.get 'front_camera'
 #  camera.start
 
   buoy_monitor = Vizkit.display detector.buoy
 
-  Vizkit.display detector.relative_position
+  Vizkit.display survey.relative_position
 
   camera.frame.connect_to detector.frame
+  detector.buoy.connect_to survey.input_buoy
+
   detector.configure
   detector.start
+
+  survey.configure
+  survey.start
 
 #   Vizkit.display camera.frame
 
