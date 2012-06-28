@@ -154,6 +154,24 @@ task_context "Detector" do
    property("filter_timeout", "double", 1.5).
         doc("the time in s how long a buoy of the past is noticed by the filter.")
 
+   property("roi_x", "double", 0).
+		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
+
+   property("roi_y", "double", 0).
+		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
+
+   property("roi_width", "double", 2.0).
+		doc("for light detection: retion of interrest width")
+
+   property("roi_height", "double", 1.0).
+		doc("for light detection: retion of interrest height")
+
+   property("val_th", "int", 254).
+		doc("")
+
+   property("sat_th", "int", 0).
+		doc("")
+
    port_driven("frame")
 end
 

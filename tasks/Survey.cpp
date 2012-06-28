@@ -7,10 +7,9 @@
 #include <math.h>
 #include <iostream>
 
-int buoy_depth = 0;
 bool new_cutting = true;
+double buoy_depth;
 base::Time mov_to_cut_time;
-double good_heading=10, good_distance=3.0, good_depth=0.2;
 
 using namespace avalon;
 using namespace buoy;
@@ -59,7 +58,6 @@ bool Survey::startHook()
     started_cutting=false;
     strafed_over_180_degrees=false;
 	new_state=true;
-	buoy_depth = _buoy_depth;
 
     return true;
 }

@@ -12,10 +12,7 @@
 #define GUI_WINDOW_NAME "Buoy Monitor"
 
 int houghTh = 0, edgeTh = 0;
-int buoys_buffer_size=5,buoys_buffer_size_min=3,startvalidation=100,mindist=100,maxage=150;
-int vValue = 0;
-int hValue = 0;
-int sValue = 0;
+int buoys_buffer_size=5,buoys_buffer_size_min=3,startvalidation=100,mindist=100;
 
 using namespace avalon;
 using namespace buoy;
@@ -36,37 +33,6 @@ Detector::~Detector()
 {
 }
 
-void on_change_Hvalue(int th){
-	hValue=th;
-}
-void on_change_Vvalue(int th){
-	vValue=th;
-}
-void on_change_Svalue(int th){
-	sValue=th;
-}
-void on_change_hough_th(int th) {
-	houghTh = th;
-}
-void on_change_edge_th(int th) {
-	edgeTh = th;
-}
-
-void on_change_bufferSize(int th) {
-	buoys_buffer_size = th;
-}
-void on_change_bufferSizeMin(int th) {
-	buoys_buffer_size_min = th;
-}
-void on_change_startVal(int th) {
-	startvalidation = th;
-} 
-void on_change_mindist(int th) {
-	mindist = th;
-}
-void on_change_maxage(int th) {
-	maxage = th;
-}
 
 /// The following lines are template definitions for the various state machine
 // hooks defined by Orocos::RTT. See Detector.hpp for more detailed
@@ -88,22 +54,15 @@ bool Detector::startHook()
     previous_state=NO_BUOY_FOUND;
     current_state=NO_BUOY_FOUND;
 	state(current_state);
-
-    houghTh = _houghTh;
-	edgeTh = _edgeTh;
-	hValue= _hValue;
-	sValue= _sValue;
-	vValue= _vValue;
-	edgeTh = _edgeTh;
     
-	detector.configureHoughThreshold(houghTh);
+	detector.configureHoughThreshold(_houghTh);
 //	detector.configureEdgeThreshold(edgeTh);servoing_rbs
 
 	filter.setBufferSize(buoys_buffer_size);
     filter.setMinSize(buoys_buffer_size_min);
     filter.setStartval(startvalidation);
     filter.setMindist(mindist);
-    filter.setMaxage(maxage,true);
+    filter.setMaxage((double)_filter_timeout,true);
 
 	return true;
 }
@@ -126,26 +85,27 @@ void Detector::updateHook()
         frame.init(*fp,true);
         image = IplImage(fp->convertToCvMat());
     }
-	bool testMode = false;
 
 	filter.setMaxage((double)_filter_timeout);
 
-	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get(), false);
+	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get());
 	filter.feed(result);
+ 	
+	BuoyFeatureVector vector = filter.process();
 
-
-    BuoyFeatureVector vector = filter.process();
-		//wenn die boje gefunden wurde schreibe sie raus
+	//licht, boje und state auf initial stellen (boje nicht gefunden)
+	bool light_on = false;
+	
+	feature::Buoy buoy = feature::Buoy(0,0,-1);
+	current_state = NO_BUOY_FOUND;
+	//wenn die boje gefunden wurde schreibe sie raus
     if (vector.size() > 0 && vector.front().validation>-1) {
-        feature::Buoy& buoy=vector.front();
-        //vector.front()=buoy;
-        _buoy.write(buoy);
+        buoy=vector.front();
 		current_state = BUOY_FOUND;
-    }else { //wenn keine boje gefunden wurde, schreibe eine neue mit negativem Radius
-		feature::Buoy* buoy = new feature::Buoy(0,0,-1);
-		_buoy.write(*buoy);
-		current_state = NO_BUOY_FOUND;
-	}
+		light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
+    }
+	_buoy.write(buoy);
+	_light.write(light_on);
 
 	if(current_state!=previous_state){
 		state(current_state);
