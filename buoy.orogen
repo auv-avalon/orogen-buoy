@@ -96,6 +96,8 @@ task_context "Survey" do
    property("cutting_wait_time", "int", 60)
 	doc("time in seconds to wait in moving_to_cutting_distance before cutting.")
 
+   port_driven 'input_buoy'
+
 end
 
 task_context "Detector" do
