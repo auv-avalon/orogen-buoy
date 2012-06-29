@@ -11,7 +11,7 @@ include Orocos
 #puts Orocos.register_pkgconfig_path('../build')
 
 Orocos.initialize
-Orocos.run 'buoy_test',:wait=>20 do
+Orocos.run ("buoy_test" => nil, :wait => 20) do
   #Orocos.log_all_ports
   detector = Orocos::TaskContext.get "buoy_detector"
   camera = Orocos::TaskContext.get "front_camera"
@@ -20,6 +20,8 @@ Orocos.run 'buoy_test',:wait=>20 do
 
   detector.configure
   detector.start
+
+  sleep 5
 
   STDERR.puts "configuration done"
 

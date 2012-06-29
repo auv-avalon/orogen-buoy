@@ -40,6 +40,9 @@ namespace buoy {
     	States previous_state;
     	States current_state;
     	RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> fp;//to read inputframes
+		frame_helper::FrameHelper frameHelper;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> hframe;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> sframe;
 
 
     public:

@@ -16,17 +16,25 @@ int buoys_buffer_size=5,buoys_buffer_size_min=3,startvalidation=100,mindist=100;
 
 using namespace avalon;
 using namespace buoy;
-frame_helper::FrameHelper frameHelper;
+
 
 
 Detector::Detector(std::string const& name, TaskCore::TaskState initial_state)
     : DetectorBase(name, initial_state)
 {
+//	h_frame = new base::samples::frame::Frame();
+//	s_frame = new base::samples::frame::Frame();
+//	h_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
+//	s_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
+	hframe.reset(new base::samples::frame::Frame());
+	sframe.reset(new base::samples::frame::Frame());
 }
 
 Detector::Detector(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state)
     : DetectorBase(name, engine, initial_state)
 {
+//	h_frame = new base::samples::frame::Frame();
+//	s_frame = new base::samples::frame::Frame();
 }
 
 Detector::~Detector()
@@ -113,15 +121,15 @@ void Detector::updateHook()
 	}
 	
 	if(_debug){
-/*		cv::Mat h_mat = detector.getHshaded();
-		cv::Mat s_mat = detector.getSplane();
 		frame_helper::FrameHelper fh = frame_helper::FrameHelper();
-		base::samples::frame::Frame h_frame = base::samples::frame::Frame();
-		base::samples::frame::Frame s_frame = base::samples::frame::Frame();
-		fh.copyMatToFrame(h_mat,h_frame);
-		fh.copyMatToFrame(s_mat,s_frame);
-		_h_image.write(&h_frame);
-		_s_image.write(&s_frame);*/
+		base::samples::frame::Frame* h_p = hframe.write_access();
+		base::samples::frame::Frame* s_p = sframe.write_access();
+		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*h_p);
+		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*s_p);
+		hframe.reset(h_p);
+		sframe.reset(s_p);
+		_h_image.write(hframe);
+		_s_image.write(sframe);
 	}
 }
 
