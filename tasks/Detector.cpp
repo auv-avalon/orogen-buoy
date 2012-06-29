@@ -111,6 +111,12 @@ void Detector::updateHook()
 		state(current_state);
 		previous_state=current_state;
 	}
+	cv::Mat h_mat = detector.getHshaded();
+	cv::Mat s_mat = detector.getSplane();
+	if(_debug){
+		_h_image.write(detector.getHshaded());
+		_s_image.write(detector.getSplane());
+	}
 }
 
 void Detector::cleanupHook() {

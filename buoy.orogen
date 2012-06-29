@@ -120,6 +120,11 @@ task_context "Detector" do
    output_port("light", "bool").
         doc("sent true if a light has been detected onto a buoy")
 
+   output_port("h_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
+   output_port("s_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
+
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
@@ -171,6 +176,9 @@ task_context "Detector" do
 
    property("sat_th", "int", 0).
 		doc("")
+
+   property("debug", "bool", 1).
+		doc("debugging or not?")
 
    port_driven("frame")
 end
