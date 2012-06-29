@@ -111,11 +111,17 @@ void Detector::updateHook()
 		state(current_state);
 		previous_state=current_state;
 	}
-	cv::Mat h_mat = detector.getHshaded();
-	cv::Mat s_mat = detector.getSplane();
+	
 	if(_debug){
-		_h_image.write(detector.getHshaded());
-		_s_image.write(detector.getSplane());
+/*		cv::Mat h_mat = detector.getHshaded();
+		cv::Mat s_mat = detector.getSplane();
+		frame_helper::FrameHelper fh = frame_helper::FrameHelper();
+		base::samples::frame::Frame h_frame = base::samples::frame::Frame();
+		base::samples::frame::Frame s_frame = base::samples::frame::Frame();
+		fh.copyMatToFrame(h_mat,h_frame);
+		fh.copyMatToFrame(s_mat,s_frame);
+		_h_image.write(&h_frame);
+		_s_image.write(&s_frame);*/
 	}
 }
 
