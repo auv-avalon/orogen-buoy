@@ -125,7 +125,7 @@ void Detector::updateHook()
 		base::samples::frame::Frame* h_p = hframe.write_access();
 		base::samples::frame::Frame* s_p = sframe.write_access();
 		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*h_p);
-		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*s_p);
+		frame_helper::FrameHelper::copyMatToFrame(detector.getSplane(),*s_p);
 		hframe.reset(h_p);
 		sframe.reset(s_p);
 		_h_image.write(hframe);

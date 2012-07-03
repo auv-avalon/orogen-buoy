@@ -20,7 +20,7 @@ class BuoyDetector
 	@s_frame_port.connect_to @window.s_image, :type=>:buffer,:size=>1
 	@h_frame_port.connect_to @window.h_image, :type=>:buffer,:size=>1
     @buoy_task.buoy.connect_to self.method(:display)
-	@buoy_task.other_buoys.connect_to self.method(:display_debug)
+#	@buoy_task.other_buoys.connect_to self.method(:display_debug)
 
     refresh = Qt::Timer.new
     refresh.connect(SIGNAL('timeout()')) do 
@@ -31,9 +31,19 @@ class BuoyDetector
         end
     end
     refresh.start(2000)
-
+	@window.hValue.setValue(@buoy_task.hValue)
 	@window.hValue.connect(SIGNAL('valueChanged(double)')) do |value|
-		#@buoy_task.hValue = value
+		@buoy_task.hValue = value
+        #@pipeline_task.forceAngle(value/180*Math::PI)
+    end
+	@window.vValue.setValue(@buoy_task.vValue)
+	@window.vValue.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.vValue = value
+        #@pipeline_task.forceAngle(value/180*Math::PI)
+    end
+	@window.sValue.setValue(@buoy_task.sValue)
+	@window.sValue.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.sValue = value
         #@pipeline_task.forceAngle(value/180*Math::PI)
     end
 
