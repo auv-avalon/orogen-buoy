@@ -20,10 +20,7 @@ class BuoyDetector
 	@s_frame_port.connect_to @window.s_image, :type=>:buffer,:size=>1
 	@h_frame_port.connect_to @window.h_image, :type=>:buffer,:size=>1
     @buoy_task.buoy.connect_to self.method(:display)
-
-    @window.SpinBoxSpeed.setEnabled false
-    @window.SpinBoxColorChannel.setEnabled false
-    @window.SpinBoxDepth.setEnabled false
+	@buoy_task.other_buoys.connect_to self.method(:display_debug)
 
     refresh = Qt::Timer.new
     refresh.connect(SIGNAL('timeout()')) do 
@@ -35,103 +32,89 @@ class BuoyDetector
     end
     refresh.start(2000)
 
-#    @line1 = @window.ImageView.addLine(0,0,1,Qt::Color.new(0,0,255),0,0);
-#    @line2 = @window.ImageView.addLine(0,0,1,Qt::Color.new(0,0,255),0,0);
-#    @line3 = @window.ImageView.addLine(0,0,1,Qt::Color.new(255,0,0),0,0);
-#    @line4 = @window.ImageView.addLine(0,0,1,Qt::Color.new(255,0,0),0,0);
-#    @line1.openGL true
-#    @line2.openGL true
-#    @line3.openGL true
-#    @line4.openGL true
+	@window.hValue.connect(SIGNAL('valueChanged(double)')) do |value|
+		#@buoy_task.hValue = value
+        #@pipeline_task.forceAngle(value/180*Math::PI)
+    end
+
+    @lineX = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+    @lineX.openGL true
+	@lineY = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+	@lineY.openGL true
+
+	#debug-linien
+	@lines = Array.new
+#	@lineX1 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#    @lineX1.openGL true
+#	@lineY1 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#	@lineY1.openGL true
+#	@lineX2 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#    @lineX2.openGL true
+#	@lineY2 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#	@lineY2.openGL true
+#	@lineX3 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#    @lineX3.openGL true
+#	@lineY3 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
+#	@lineY3.openGL true
 
     @pen = Qt::Pen.new
     @pen.setColor(Qt::Color.new(255,0,0))
   end
 
-#  def display_debug(sample,_)
-#      #not working
-     # @window.PlotWidget.clearCurveData(1)
-#      @window.PlotWidget.clearAll()
-#      @window.PlotWidget.registerCurve(2,@pen,"pos",1)
-
-#      values = sample.rays.to_a
-#      array_x = 0.upto(values.size()-1).to_a.map{|v|v.to_f}
-#      @window.PlotWidget.addPoints(array_x,values,1) # plot column
-
-#      values= [0.0,values.max]
-#      array_x = [sample.max_ray_pos.to_f,sample.max_ray_pos.to_f]
-#      @window.PlotWidget.addPoints(array_x,values,2)
-#  end
+  def display_debug(sample,_)
+	#löschen der alten linien
+	@lines.each do |line|
+		@window.main_image.removeItem(line, true)
+	end
+	@lines.clear
+    #einzeichnen der debug-samples
+	sample.each do |buoy|
+		puts "ein each..."
+#		start_x = buoy.image_x-buoy.image_radius
+#		end_x = buoy.image_x+bouy.image_radius
+#		start_y = buoy.image_y
+#		end_y = buoy_image_y
+#		@lines.add(@window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y))
+#		start_x = buoy.image_x
+#		end_x = buoy.image_x
+#		start_y = buoy.image_y-buoy.image_radius
+#		end_y = buoy_image_y+bouy.image_radius
+#		@lines.add(@window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y))
+	end
+  end
 
   def display(sample,_)
       @window.x.setText(sample.image_x.to_s)
 	  @window.y.setText(sample.image_y.to_s)
       @window.r.setText(sample.image_radius.to_s)
-#      @window.prop.setText(sample.propability.to_s)
       @window.val.setText(sample.validation.to_s)
       @window.world_x.setText(sample.world_coord[0].to_s)
       @window.world_y.setText(sample.world_coord[1].to_s)
       @window.world_z.setText(sample.world_coord[2].to_s)
 
-#      center_x = @window.ImageView.getWidth()/2
-#      center_y = @window.ImageView.getHeight()/2
 
-#      if sample.accepted
-#          #update image overlay
-#          x = sample.x + sample.width*Math.cos(sample.angle)*0.5 +center_x
-#          y = sample.y - sample.width*Math.sin(sample.angle)*0.5 +center_y 
-#          @line1.setPosX(x - 640*Math.sin(sample.angle))
-#          @line1.setPosY(y - 640*Math.cos(sample.angle))
-#          @line1.setEndX(x + 640*Math.sin(sample.angle))
-#          @line1.setEndY(y + 640*Math.cos(sample.angle))
+	if sample.image_radius!=-1
+		@lineX.setPosX(sample.image_x-sample.image_radius)
+		@lineX.setEndX(sample.image_x+sample.image_radius)
+		@lineX.setPosY(sample.image_y)
+		@lineX.setEndY(sample.image_y)
+		@lineY.setPosX(sample.image_x)
+		@lineY.setEndX(sample.image_x)
+		@lineY.setPosY(sample.image_y-sample.image_radius)
+		@lineY.setEndY(sample.image_y+sample.image_radius)
+	else
+		@lineX.setPosX(0)
+		@lineX.setEndX(0)
+		@lineX.setPosY(0)
+		@lineX.setEndY(0)
+		@lineY.setPosX(0)
+		@lineY.setEndX(0)
+		@lineY.setPosY(0)
+		@lineY.setEndY(0)
+	end
 
-#          x = sample.x - sample.width*Math.cos(sample.angle)*0.5 + center_x
-#          y = sample.y + sample.width*Math.sin(sample.angle)*0.5 + center_y 
-#          @line2.setPosX(x + 640*Math.sin(sample.angle))
-#          @line2.setPosY(y + 640*Math.cos(sample.angle))
-#          @line2.setEndX(x - 640*Math.sin(sample.angle))
-#          @line2.setEndY(y - 640*Math.cos(sample.angle))
 
-
- #         @line4.setPosX(sample.x + center_x)
- #         @line4.setPosY(sample.y + center_y)
- #         @line4.setEndX(sample.gap_pos_x + center_x)
- #         @line4.setEndY(sample.gap_pos_y + center_y)
-
-  #        @line3.setPosX(0)
-  #        @line3.setPosY(0)
-  #        @line3.setEndX(0)
-   #       @line3.setEndY(0)
- #     elsif sample.confidence > 0.1
- #         @line1.setPosX(0)
- #         @line1.setPosY(0)
- #         @line1.setEndX(0)
- #         @line1.setEndY(0)
- #         @line2.setPosX(0)
- #         @line2.setPosY(0)
- #         @line2.setEndX(0)
- #         @line2.setEndY(0)
-
- #         @line3.setPosX(x - 640*Math.sin(sample.angle))
- #         @line3.setPosY(y - 640*Math.cos(sample.angle))
- #         @line3.setEndX(x + 640*Math.sin(sample.angle))
- #         @line3.setEndY(y + 640*Math.cos(sample.angle))
-#      else
-#          @line1.setPosX(0)
-#          @line1.setPosY(0)
-#          @line1.setEndX(0)
-#          @line1.setEndY(0)
-#          @line2.setPosX(0)
-#          @line2.setPosY(0)
-#          @line2.setEndX(0)
-#          @line2.setEndY(0)
-#          @line3.setPosX(0)
-#          @line3.setPosY(0)
-#          @line3.setEndX(0)
-#          @line3.setEndY(0)
-
-#      end
-#      @window.ImageView.update2
+      @window.main_image.update2
   end
 
   def show

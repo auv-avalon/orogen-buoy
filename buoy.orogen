@@ -125,6 +125,10 @@ task_context "Detector" do
 
    output_port("s_image", ro_ptr("base::samples::frame::Frame")).
 		doc("only for debugging")
+	
+   output_port("other_buoys","std::vector</avalon/feature/Buoy>").
+		doc("only for debugging")
+
 
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 

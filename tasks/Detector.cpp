@@ -130,6 +130,7 @@ void Detector::updateHook()
 		sframe.reset(s_p);
 		_h_image.write(hframe);
 		_s_image.write(sframe);
+		_other_buoys.write(vector);
 	}
 }
 
