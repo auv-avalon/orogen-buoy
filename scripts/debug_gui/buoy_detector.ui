@@ -19,6 +19,16 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <widget class="ImageView" name="main_image">
+         <property name="toolTip">
+          <string>ImageView</string>
+         </property>
+         <property name="whatsThis">
+          <string>Widget for displaying frames.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="ImageView" name="s_image">
          <property name="enabled">
           <bool>true</bool>
@@ -142,70 +152,70 @@
             </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>Propability</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="prop">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
             <widget class="QLabel" name="label_14">
              <property name="text">
               <string>Validation</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
+           <item row="4" column="1">
             <widget class="QLabel" name="val">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="label_16">
              <property name="text">
               <string>world X</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
+           <item row="5" column="1">
             <widget class="QLabel" name="world_x">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
+           <item row="6" column="0">
             <widget class="QLabel" name="label_17">
              <property name="text">
               <string>world Y</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
+           <item row="6" column="1">
             <widget class="QLabel" name="world_y">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="label_18">
              <property name="text">
               <string>world Z</string>
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="7" column="1">
             <widget class="QLabel" name="world_z">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>State</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="buoy_state">
              <property name="text">
               <string/>
              </property>
@@ -217,9 +227,9 @@
           <property name="geometry">
            <rect>
             <x>230</x>
-            <y>-20</y>
+            <y>0</y>
             <width>271</width>
-            <height>351</height>
+            <height>261</height>
            </rect>
           </property>
           <property name="title">
@@ -333,21 +343,21 @@
           <widget class="QLabel" name="label_9">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>150</y>
+             <x>140</x>
+             <y>80</y>
              <width>101</width>
              <height>17</height>
             </rect>
            </property>
            <property name="text">
-            <string>light roi_x:</string>
+            <string>Bojen-Radius:</string>
            </property>
           </widget>
-          <widget class="QDoubleSpinBox" name="roi_x">
+          <widget class="QDoubleSpinBox" name="buoy_radius">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>170</y>
+             <x>140</x>
+             <y>100</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -365,11 +375,95 @@
             <double>0.500000000000000</double>
            </property>
           </widget>
-          <widget class="QLabel" name="label_10">
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>White Light</string>
+         </property>
+         <widget class="QWidget" name="formLayoutWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>211</width>
+            <height>209</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout_3">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Licht an?:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="light_on">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>0</y>
+            <width>281</width>
+            <height>241</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Debugging</string>
+          </property>
+          <widget class="QLabel" name="label_27">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>30</y>
+             <width>101</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>light roi_x:</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="roi_x">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>50</y>
+             <width>131</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>2</number>
+           </property>
+           <property name="minimum">
+            <double>-160.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>160.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_28">
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>150</y>
+             <y>30</y>
              <width>101</width>
              <height>17</height>
             </rect>
@@ -382,7 +476,7 @@
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>170</y>
+             <y>50</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -404,7 +498,7 @@
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>220</y>
+             <y>100</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -422,11 +516,11 @@
             <double>0.500000000000000</double>
            </property>
           </widget>
-          <widget class="QLabel" name="label_11">
+          <widget class="QLabel" name="label_29">
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>200</y>
+             <y>80</y>
              <width>101</width>
              <height>17</height>
             </rect>
@@ -439,7 +533,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>220</y>
+             <y>100</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -457,11 +551,11 @@
             <double>0.500000000000000</double>
            </property>
           </widget>
-          <widget class="QLabel" name="label_12">
+          <widget class="QLabel" name="label_30">
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>200</y>
+             <y>80</y>
              <width>101</width>
              <height>17</height>
             </rect>
@@ -474,7 +568,7 @@
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>270</y>
+             <y>150</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -492,11 +586,11 @@
             <double>0.500000000000000</double>
            </property>
           </widget>
-          <widget class="QLabel" name="label_15">
+          <widget class="QLabel" name="label_31">
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>250</y>
+             <y>130</y>
              <width>101</width>
              <height>17</height>
             </rect>
@@ -509,7 +603,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>270</y>
+             <y>150</y>
              <width>131</width>
              <height>27</height>
             </rect>
@@ -527,11 +621,11 @@
             <double>0.500000000000000</double>
            </property>
           </widget>
-          <widget class="QLabel" name="label_19">
+          <widget class="QLabel" name="label_32">
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>250</y>
+             <y>130</y>
              <width>101</width>
              <height>17</height>
             </rect>
@@ -544,12 +638,9 @@
         </widget>
        </item>
        <item>
-        <widget class="ImageView" name="main_image">
-         <property name="toolTip">
-          <string>ImageView</string>
-         </property>
-         <property name="whatsThis">
-          <string>Widget for displaying frames.</string>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Survey</string>
          </property>
         </widget>
        </item>

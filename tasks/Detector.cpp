@@ -57,7 +57,7 @@ bool Detector::startHook()
     if (!DetectorBase::startHook())
 		return false;
    	double r = _buoy_radius;
-   	posestimator = BuoyPosEstimator(r);
+   	posestimator = BuoyPosEstimator();
 
     previous_state=NO_BUOY_FOUND;
     current_state=NO_BUOY_FOUND;
@@ -109,6 +109,7 @@ void Detector::updateHook()
 	//wenn die boje gefunden wurde schreibe sie raus
     if (vector.size() > 0 && vector.front().validation>-1) {
         buoy=vector.front();
+		posestimator.estimateAuvKoordinates(buoy, frame, _buoy_radius.get());
 		current_state = BUOY_FOUND;
 		light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
     }

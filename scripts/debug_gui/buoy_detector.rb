@@ -20,7 +20,8 @@ class BuoyDetector
 	@s_frame_port.connect_to @window.s_image, :type=>:buffer,:size=>1
 	@h_frame_port.connect_to @window.h_image, :type=>:buffer,:size=>1
     @buoy_task.buoy.connect_to self.method(:display)
-#	@buoy_task.other_buoys.connect_to self.method(:display_debug)
+	@buoy_task.other_buoys.connect_to self.method(:display_debug)
+	@buoy_task.light.connect_to self.method(:display_light)
 
     refresh = Qt::Timer.new
     refresh.connect(SIGNAL('timeout()')) do 
@@ -31,21 +32,57 @@ class BuoyDetector
         end
     end
     refresh.start(2000)
+##
+## Detektion
+##
 	@window.hValue.setValue(@buoy_task.hValue)
 	@window.hValue.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.hValue = value
-        #@pipeline_task.forceAngle(value/180*Math::PI)
     end
 	@window.vValue.setValue(@buoy_task.vValue)
 	@window.vValue.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.vValue = value
-        #@pipeline_task.forceAngle(value/180*Math::PI)
     end
 	@window.sValue.setValue(@buoy_task.sValue)
 	@window.sValue.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.sValue = value
-        #@pipeline_task.forceAngle(value/180*Math::PI)
     end
+	@window.buoy_radius.setValue(@buoy_task.buoy_radius)
+	@window.buoy_radius.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.buoy_radius = value
+    end
+##
+## Licht
+##
+	@window.roi_x.setValue(@buoy_task.roi_x)
+	@window.roi_x.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.roi_x = value
+    end
+	@window.roi_y.setValue(@buoy_task.roi_y)
+	@window.roi_y.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.roi_y = value
+    end
+	@window.roi_width.setValue(@buoy_task.roi_width)
+	@window.roi_width.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.roi_width = value
+    end
+	@window.roi_height.setValue(@buoy_task.roi_height)
+	@window.roi_height.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.roi_height = value
+    end
+	@window.val_th.setValue(@buoy_task.val_th)
+	@window.val_th.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.val_th = value
+    end
+	@window.sat_th.setValue(@buoy_task.sat_th)
+	@window.sat_th.connect(SIGNAL('valueChanged(double)')) do |value|
+		@buoy_task.sat_th = value
+    end
+##
+## Survey
+##
+
+
 
     @lineX = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
     @lineX.openGL true
@@ -54,21 +91,23 @@ class BuoyDetector
 
 	#debug-linien
 	@lines = Array.new
-#	@lineX1 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#    @lineX1.openGL true
-#	@lineY1 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#	@lineY1.openGL true
-#	@lineX2 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#    @lineX2.openGL true
-#	@lineY2 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#	@lineY2.openGL true
-#	@lineX3 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#    @lineX3.openGL true
-#	@lineY3 = @window.main_image.addLine(0,0,1,Qt::Color.new(255,255,0),0,0);
-#	@lineY3.openGL true
+	#licht-linien
+#	@light_top = @window.main_image.addLine(0,0,1,Qt::Color.new(0,0,0),0,0);
+#	@light_top.openGL true
+#	@light_left = @window.main_image.addLine(0,0,1,Qt::Color.new(0,0,0),0,0);
+#	@light_left.openGL true
+#	@light_right = @window.main_image.addLine(0,0,1,Qt::Color.new(0,0,0),0,0);
+#	@light_right.openGL true
+#	@light_buttom = @window.main_image.addLine(0,0,1,Qt::Color.new(0,0,0),0,0);
+#	@light_buttom.openGL true
+
 
     @pen = Qt::Pen.new
     @pen.setColor(Qt::Color.new(255,0,0))
+  end
+
+  def display_light(sample,_)
+	@window.light_on.setText(sample.to_s)
   end
 
   def display_debug(sample,_)
@@ -79,17 +118,16 @@ class BuoyDetector
 	@lines.clear
     #einzeichnen der debug-samples
 	sample.each do |buoy|
-		puts "ein each..."
-#		start_x = buoy.image_x-buoy.image_radius
-#		end_x = buoy.image_x+bouy.image_radius
-#		start_y = buoy.image_y
-#		end_y = buoy_image_y
-#		@lines.add(@window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y))
-#		start_x = buoy.image_x
-#		end_x = buoy.image_x
-#		start_y = buoy.image_y-buoy.image_radius
-#		end_y = buoy_image_y+bouy.image_radius
-#		@lines.add(@window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y))
+		start_x = buoy.image_x-buoy.image_radius
+		end_x = buoy.image_x+buoy.image_radius
+		start_y = buoy.image_y
+		end_y = buoy.image_y
+		@lines << @window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y)
+		start_x = buoy.image_x
+		end_x = buoy.image_x
+		start_y = buoy.image_y-buoy.image_radius
+		end_y = buoy.image_y+buoy.image_radius
+		@lines << @window.main_image.addLine(start_x,start_y,2,Qt::Color.new(0,255,0),end_x,end_y)
 	end
   end
 
@@ -98,9 +136,9 @@ class BuoyDetector
 	  @window.y.setText(sample.image_y.to_s)
       @window.r.setText(sample.image_radius.to_s)
       @window.val.setText(sample.validation.to_s)
-      @window.world_x.setText(sample.world_coord[0].to_s)
-      @window.world_y.setText(sample.world_coord[1].to_s)
-      @window.world_z.setText(sample.world_coord[2].to_s)
+      @window.world_x.setText(round(sample.world_coord[0]).to_s)
+      @window.world_y.setText(round(sample.world_coord[1]).to_s)
+      @window.world_z.setText(round(sample.world_coord[2]).to_s)
 
 
 	if sample.image_radius!=-1
