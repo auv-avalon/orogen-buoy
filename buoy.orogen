@@ -22,26 +22,34 @@ task_context "Survey" do
    # --------------------------------------------------------------------------
    states("BUOY_SEARCH", "BUOY_DETECTED", "BUOY_LOST", "RE_SEARCHING_BUOY", "BUOY_ARRIVED", "STRAFING", 
         "STRAFE_FINISHED", "STRAFE_ERROR", "MOVING_TO_CUTTING_DISTANCE", "CUTTING",
-        "CUTTING_SUCCESS", "CUTTING_ERROR")
+        "CUTTING_SUCCESS", "CUTTING_ERROR", "STRAFE_TO_ANGLE", "ANGLE_ARRIVED")
 
    # --------------------------------------------------------------------------
    # I n p u t s 
    # --------------------------------------------------------------------------
    input_port("orientation_samples", "base::samples::RigidBodyState").
 		doc 'Vehicle orientation with depth'
+
    input_port("force_cutting", "bool").
 		doc("if true the task will direktly go tu STRAFE_FINISHED-state")
+
    input_port("input_buoy", "/avalon/feature/Buoy").
         doc("feature data of a buoy with the highest probability in frame")
 
    input_port("motion_command", "/base/AUVMotionCommand").
         doc("motion command submitted by nurc for surveying a specific yaw/z to buoy")
 
+   input_port("light", "bool").
+		doc("input-port, must be connected to detector.light")
+
+   input_port("target_angle_input", "double").
+		doc("if u submit a value to the task, it will automatically try to reach this heading while surrounding the buoy")
+
    # --------------------------------------------------------------------------
    # O u t p u t s
    # --------------------------------------------------------------------------
    output_port("strafed_angle", "double").
-	doc("the angle that was strafed in pi...")
+		doc("the angle that was strafed in pi...")
 
    output_port("relative_position", "/base/AUVPositionCommand").
         doc("relative position of the buoy in frame")
@@ -52,6 +60,9 @@ task_context "Survey" do
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
+
+   property("endless_strafe","bool", true).
+		doc("if true avalon strafes until it gets another command.")
 
    property("max_buoy_distance", "double", 2.0).
         doc("maximum buoy distance in m")
@@ -82,8 +93,10 @@ task_context "Survey" do
 
    property("maxX", "double", 0.2).
         doc("maximum x value for strafing")
+
    property("cutting_time", "int", 53).
         doc("time for the cutting-action in seconds.")
+
    property("cutting_hight", "double", -0.25)
         doc("how much higher should he go to cut the buoy.")
 

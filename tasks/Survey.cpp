@@ -58,6 +58,10 @@ bool Survey::startHook()
     started_cutting=false;
     strafed_over_180_degrees=false;
 	new_state=true;
+	strafe_to_angle=true;
+	angle_arrived=false;
+	target_heading=-M_PI/4*3;	//=0
+	winkelspiel=0.04;	//=0.4
 
     return true;
 }
@@ -81,6 +85,25 @@ void Survey::updateHook()
         current_state=STRAFE_FINISHED;
 		new_state=true;
 	}
+	//wenn ein target-winkel übergeben wird, gehe zu diesem winkel
+	if(_target_angle_input.read(target_heading) == RTT::NewData){
+		strafe_to_angle=true;
+	}
+	
+/*
+ *	zu jeder zeit müssen das heading und der state des lichtes per modem übertragen werden
+ *
+ *  - herum fahren und abei daten senden...
+ *  - ...bis der befehl kommt auf zu hören
+ *  - das vorgeschlagene heading ansteuern
+ */
+	//if light is on handle it
+	bool light = false;
+	if(_light.read(light) == RTT::NewData && light){
+		//hier muss dem modem so einiges erzählt werden
+	}
+
+
 	
 //HIER DIE BOJE EINLESEN UM SIE ZU BENUTZEN
 	feature::Buoy buoy;
@@ -171,7 +194,10 @@ void Survey::updateHook()
                 }
                 //last_command.clear();
                 previous_state=current_state;
-                current_state=STRAFING;
+                if(strafe_to_angle)		//überprüfen ob er in normales strafing geht, oder zu einem bestimmten zielheading strafen soll
+					current_state=STRAFE_TO_ANGLE;					
+				else
+					current_state=STRAFING;
                 //wenn mehr als 180° erreicht wurden merke dies
                 if(!strafed_over_180_degrees && started_servoing && did180degrees()){
                     strafed_over_180_degrees=true;
@@ -181,7 +207,7 @@ void Survey::updateHook()
                     double x=ot.getYaw()-servoing_rbs.getYaw();
                     if(x>M_PI) x-=2*M_PI;
                     if(x<-M_PI) x+=2*M_PI;
-                    if(x<0.4 && x>-0.4){//überprüfen ob er zurück am ursprungsort ist
+                    if(x<winkelspiel && x>-winkelspiel && !_endless_strafe){//überprüfen ob er zurück am ursprungsort ist und ob er endlos strafen soll oder nicht
                         strafed_over_180_degrees=false;
                         started_servoing=false;
                         previous_state=current_state;
@@ -204,7 +230,7 @@ void Survey::updateHook()
             double x_diff = sqrt((buoy.world_coord[0]-_max_buoy_distance)*(buoy.world_coord[0]-_max_buoy_distance));
             double y_diff = sqrt(buoy.world_coord[1]*buoy.world_coord[1]);
            // double z_diff = sqrt(buoy.world_coord[2]*buoy.world_coord[2]);
-            if(x_diff<_good_x && y_diff<_good_y_z*1.5){ //wenn die Buoy noch zentral ist
+            if(x_diff<_good_x && y_diff<_good_y_z*1.5 && !strafe_to_angle){ //wenn die Buoy noch zentral ist und nicht zwischenzeitig ein befehl eingegangen ist, wo hin gestrafed werden soll
 				if(strafed_over_180_degrees && !_strafe_around) command=commander.strafeBuoy(buoy,ot,-_strafe_intensity, _buoy_depth, _headingFactor, _headingModulation);
 				else command=commander.strafeBuoy(buoy,ot,_strafe_intensity, _buoy_depth, _headingFactor, _headingModulation);
 				//wenn mehr als 180° erreicht wurden merke dies
@@ -216,7 +242,7 @@ void Survey::updateHook()
                     double x=ot.getYaw()-servoing_rbs.getYaw();
                     if(x>M_PI) x-=2*M_PI;
                     if(x<-M_PI) x+=2*M_PI;
-                    if(x<0.4 && x>-0.4){
+                    if(x<winkelspiel && x>-winkelspiel && !_endless_strafe){
                         strafed_over_180_degrees=false;
                         started_servoing=false;
                         previous_state=current_state;
@@ -291,6 +317,59 @@ void Survey::updateHook()
     case CUTTING_SUCCESS:
 		
     break;
+	case STRAFE_TO_ANGLE:
+		if(buoyfound){
+            double x_diff = sqrt((buoy.world_coord[0]-_max_buoy_distance)*(buoy.world_coord[0]-_max_buoy_distance));
+            double y_diff = sqrt(buoy.world_coord[1]*buoy.world_coord[1]);
+			//strafe-richtung bestimmen
+			double heading = ot.getYaw();
+			double heading_diff = target_heading-heading;
+			if(heading_diff<-M_PI)
+				heading_diff+=2*M_PI;
+			if(heading_diff>M_PI)
+				heading_diff-=2*M_PI;
+			double strafe_int = 0;
+			if(heading_diff<0){		//wenn kleiner, dann nach links strafen, das führt zu drehen nach rechts
+				strafe_int = _strafe_intensity * _strafe_intensity;
+			} else{					//wenn größer 0 is, dann nach rechts strafen, das führt zu drehen nach links
+				strafe_int = -1 * (_strafe_intensity * _strafe_intensity);
+			}
+			
+            if(x_diff<_good_x && y_diff<_good_y_z*1.5){ //wenn die Buoy noch zentral ist
+				
+				if(heading_diff<winkelspiel && heading_diff>-winkelspiel)	//wenn das target-heading bereits erreicht wurde zentriere die boje mit fixem heading
+				{
+					angle_arrived=true;
+					previous_state=current_state;
+					current_state=ANGLE_ARRIVED;
+					new_state=true;
+				}
+				if(!angle_arrived){					
+					command=commander.strafeBuoy(buoy,ot,strafe_int, _buoy_depth, _headingFactor, _headingModulation);
+				}
+            }else{
+                previous_state=current_state;
+                current_state=BUOY_DETECTED;
+				new_state=true;
+                command=commander.centerBuoy(buoy,ot, _buoy_depth, _maxX, _headingFactor );
+            }
+        }else{
+            previous_state=current_state;
+		    re_search_start=base::Time::now();
+            current_state=RE_SEARCHING_BUOY;
+		    new_state=true;
+        }
+	break;
+	case ANGLE_ARRIVED:
+		if(buoyfound){
+			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, target_heading);
+		} else {
+			previous_state=current_state;
+		    re_search_start=base::Time::now();
+            current_state=RE_SEARCHING_BUOY;
+		    new_state=true;
+		}
+	break;
     default:
         current_state=BUOY_SEARCH;
 

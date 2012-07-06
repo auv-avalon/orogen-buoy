@@ -36,8 +36,13 @@ namespace buoy {
     	bool started_cutting;
     	bool strafed_over_180_degrees;
 		bool new_state;
+		bool strafe_to_angle;
+		bool angle_arrived;
+		double target_heading;
 		base::Time cutting_start;
 		base::Time re_search_start;
+
+		double winkelspiel;
 
 
     public:
@@ -116,7 +121,7 @@ namespace buoy {
          */
         void cleanupHook();
 
-	bool did180degrees();
+		bool did180degrees();
 
         base::AUVPositionCommand createPositionCommand(avalon::feature::Buoy buoys);
 
