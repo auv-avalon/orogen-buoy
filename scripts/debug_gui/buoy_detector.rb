@@ -3,7 +3,7 @@ require 'vizkit'
 
 class BuoyDetector
   RADTODEG = 180.0/Math::PI
-
+  Bla = "0"
   #float.round(d) is not available for ruby 1.8
   def round(n)
       (n*10**4).round.to_f/10**4
@@ -50,6 +50,8 @@ class BuoyDetector
 ##
 ## Licht
 ##
+
+
 	@window.roi_x.setValue(@buoy_task.roi_x)
 	@window.roi_x.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.roi_x = value
@@ -102,7 +104,9 @@ class BuoyDetector
     @pen.setColor(Qt::Color.new(255,0,0))
   end
 
+
   def display_light(sample,_)
+	@white_light_detected= sample.to_s=="1"
 	@window.light_on.setText(sample.to_s)
   end
 
@@ -146,6 +150,35 @@ class BuoyDetector
 		@lineY.setEndX(sample.image_x)
 		@lineY.setPosY(sample.image_y-sample.image_radius)
 		@lineY.setEndY(sample.image_y+sample.image_radius)
+
+
+		roi_x =  @buoy_task.roi_x
+		roi_y = @buoy_task.roi_y
+		roi_width = @buoy_task.roi_width
+		roi_height = @buoy_task.roi_height
+
+		p1_x = sample.image_x-(roi_x * sample.image_radius) - (roi_width*sample.image_radius)/2
+		p1_y = sample.image_y- sample.image_radius + (roi_y*sample.image_radius) -(roi_height*sample.image_radius)
+		p2_x = p1_x+(roi_width*sample.image_radius)
+		p2_y = p1_y
+		p3_x = p2_x
+		p3_y = p1_y + (roi_height*sample.image_radius)
+		p4_x = p1_x
+		p4_y = p3_y
+		
+		cR =255
+		cG = 0
+		if  @white_light_detected
+		cR =0
+		cG = 255
+		end
+
+		@lines << @window.main_image.addLine(p1_x,p1_y,2,Qt::Color.new(cR,cG,0),p2_x,p2_y)
+		@lines << @window.main_image.addLine(p2_x,p2_y,2,Qt::Color.new(cR,cG,0),p3_x,p3_y)
+		@lines << @window.main_image.addLine(p3_x,p3_y,2,Qt::Color.new(cR,cG,0),p4_x,p4_y)
+		@lines << @window.main_image.addLine(p4_x,p4_y,2,Qt::Color.new(cR,cG,0),p1_x,p1_y)
+		
+
 	else
 		@lineX.setPosX(0)
 		@lineX.setEndX(0)
