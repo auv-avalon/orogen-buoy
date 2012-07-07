@@ -122,7 +122,6 @@ namespace buoy {
          */
         void cleanupHook();
 
-		void lightImageDebugOutput();
 
     };
 }

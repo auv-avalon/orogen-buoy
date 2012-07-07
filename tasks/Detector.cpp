@@ -123,7 +123,6 @@ void Detector::updateHook()
 	}
 	
 	if(_debug){
-		frame_helper::FrameHelper fh = frame_helper::FrameHelper();
 		base::samples::frame::Frame* h_p = hframe.write_access();
 		base::samples::frame::Frame* s_p = sframe.write_access();
 		base::samples::frame::Frame* l_p = lframe.write_access();
