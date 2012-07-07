@@ -28,6 +28,7 @@ Detector::Detector(std::string const& name, TaskCore::TaskState initial_state)
 //	s_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
 	hframe.reset(new base::samples::frame::Frame());
 	sframe.reset(new base::samples::frame::Frame());
+	lframe.reset(new base::samples::frame::Frame());
 }
 
 Detector::Detector(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state)
@@ -125,12 +126,16 @@ void Detector::updateHook()
 		frame_helper::FrameHelper fh = frame_helper::FrameHelper();
 		base::samples::frame::Frame* h_p = hframe.write_access();
 		base::samples::frame::Frame* s_p = sframe.write_access();
+		base::samples::frame::Frame* l_p = lframe.write_access();
 		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*h_p);
 		frame_helper::FrameHelper::copyMatToFrame(detector.getSplane(),*s_p);
+		frame_helper::FrameHelper::copyMatToFrame(detector.getDebugImage(),*l_p);
 		hframe.reset(h_p);
 		sframe.reset(s_p);
+		lframe.reset(l_p);
 		_h_image.write(hframe);
 		_s_image.write(sframe);
+		_light_image.write(lframe);
 		_other_buoys.write(vector);
 	}
 }

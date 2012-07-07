@@ -156,7 +156,7 @@ void Survey::updateHook()
             previous_state=current_state;
 	    	new_state=true;
             if(started_cutting) current_state=MOVING_TO_CUTTING_DISTANCE;
-	      	else if(strafe_finished_bool) current_state=STRAFE_FINISHED;
+	      	else if(strafe_finished_bool & !strafe_to_angle) current_state=STRAFE_FINISHED;
 			else current_state=BUOY_DETECTED;
             command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor);
         }else{
@@ -275,7 +275,14 @@ void Survey::updateHook()
         if(buoyfound){
 //            current_state=MOVING_TO_CUTTING_DISTANCE;
 //            command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor );
-			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, servoing_rbs.getYaw(), _headingFactor);
+			if(strafe_to_angle){		//wenn ein strafe-to-angle-befehl rein gekommen ist, so strafe zu diesem winkel...
+				previous_state=current_state;
+                current_state=BUOY_DETECTED;
+				new_state=true;
+                command=commander.centerBuoy(buoy,ot, _buoy_depth, _maxX, _headingFactor );
+			} else {
+				command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, servoing_rbs.getYaw(), _headingFactor);
+			}
         }else{
 		    re_search_start=base::Time::now();
 		    current_state=RE_SEARCHING_BUOY;

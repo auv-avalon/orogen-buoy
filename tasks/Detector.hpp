@@ -43,6 +43,7 @@ namespace buoy {
 		frame_helper::FrameHelper frameHelper;
 		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> hframe;
 		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> sframe;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> lframe;	//light-frame
 
 
     public:
@@ -121,7 +122,7 @@ namespace buoy {
          */
         void cleanupHook();
 
-
+		void lightImageDebugOutput();
 
     };
 }

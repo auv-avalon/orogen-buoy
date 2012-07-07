@@ -19,6 +19,7 @@ class BuoyDetector
     @frame_port.connect_to @window.main_image, :type=>:buffer,:size=>1
 	@s_frame_port.connect_to @window.s_image, :type=>:buffer,:size=>1
 	@h_frame_port.connect_to @window.h_image, :type=>:buffer,:size=>1
+	@buoy_task.light_image.connect_to @window.light_image, :type=>:buffer,:size=>1
     @buoy_task.buoy.connect_to self.method(:display)
 	@buoy_task.other_buoys.connect_to self.method(:display_debug)
 	@buoy_task.light.connect_to self.method(:display_light)
