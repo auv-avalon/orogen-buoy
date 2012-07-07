@@ -275,7 +275,7 @@ void Survey::updateHook()
         if(buoyfound){
 //            current_state=MOVING_TO_CUTTING_DISTANCE;
 //            command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor );
-			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, servoing_rbs.getYaw());
+			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, servoing_rbs.getYaw(), _headingFactor);
         }else{
 		    re_search_start=base::Time::now();
 		    current_state=RE_SEARCHING_BUOY;
@@ -366,7 +366,7 @@ void Survey::updateHook()
 	break;
 	case ANGLE_ARRIVED:
 		if(buoyfound){
-			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, target_heading);
+			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, target_heading, _headingFactor);
 		} else {
 			previous_state=current_state;
 		    re_search_start=base::Time::now();
