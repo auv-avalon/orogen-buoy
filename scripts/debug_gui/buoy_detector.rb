@@ -39,10 +39,6 @@ class BuoyDetector
 	@window.hValue.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.hValue = value
     end
-	@window.vValue.setValue(@buoy_task.vValue)
-	@window.vValue.connect(SIGNAL('valueChanged(double)')) do |value|
-		@buoy_task.vValue = value
-    end
 	@window.sValue.setValue(@buoy_task.sValue)
 	@window.sValue.connect(SIGNAL('valueChanged(double)')) do |value|
 		@buoy_task.sValue = value
