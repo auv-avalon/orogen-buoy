@@ -58,10 +58,11 @@ bool Survey::startHook()
     started_cutting=false;
     strafed_over_180_degrees=false;
 	new_state=true;
-	strafe_to_angle=true;
+	strafe_to_angle=false;
 	angle_arrived=false;
-	target_heading=-M_PI/4*3;	//=0
-	winkelspiel=0.04;	//=0.4
+	strafe_finished_bool=false;
+	target_heading=0;
+	winkelspiel=0.08;	//=0.4
 
     return true;
 }
@@ -77,14 +78,14 @@ void Survey::updateHook()
     command.heading=command.x=command.y=command.z=0;
 
 	//if the property is true, change to STRAFE_FINISHED-state
-	bool force=false;
-    if(_force_cutting.read(force) == RTT::NewData && force){
+	bool force=false;									/**** ACHTUNG!!!! Chris hat hier _force_cutting mit irgend einem bool connected!!!  ****/
+/*    if(_force_cutting.read(force) == RTT::NewData && force){
         strafed_over_180_degrees=false;
         started_servoing=false;
         previous_state=current_state;
         current_state=STRAFE_FINISHED;
 		new_state=true;
-	}
+	}*/
 	//wenn ein target-winkel übergeben wird, gehe zu diesem winkel
 	if(_target_angle_input.read(target_heading) == RTT::NewData){
 		strafe_to_angle=true;
@@ -155,7 +156,8 @@ void Survey::updateHook()
             previous_state=current_state;
 	    	new_state=true;
             if(started_cutting) current_state=MOVING_TO_CUTTING_DISTANCE;
-	      	else current_state=BUOY_DETECTED;
+	      	else if(strafe_finished_bool) current_state=STRAFE_FINISHED;
+			else current_state=BUOY_DETECTED;
             command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor);
         }else{
 	    	base::Time time = base::Time::now()-re_search_start;
@@ -207,7 +209,7 @@ void Survey::updateHook()
                     double x=ot.getYaw()-servoing_rbs.getYaw();
                     if(x>M_PI) x-=2*M_PI;
                     if(x<-M_PI) x+=2*M_PI;
-                    if(x<winkelspiel && x>-winkelspiel && !_endless_strafe){//überprüfen ob er zurück am ursprungsort ist und ob er endlos strafen soll oder nicht
+                    if(x<winkelspiel && x>-winkelspiel){//überprüfen ob er zurück am ursprungsort ist und ob er endlos strafen soll oder nicht
                         strafed_over_180_degrees=false;
                         started_servoing=false;
                         previous_state=current_state;
@@ -242,7 +244,7 @@ void Survey::updateHook()
                     double x=ot.getYaw()-servoing_rbs.getYaw();
                     if(x>M_PI) x-=2*M_PI;
                     if(x<-M_PI) x+=2*M_PI;
-                    if(x<winkelspiel && x>-winkelspiel && !_endless_strafe){
+                    if(x<winkelspiel && x>-winkelspiel){
                         strafed_over_180_degrees=false;
                         started_servoing=false;
                         previous_state=current_state;
@@ -264,14 +266,16 @@ void Survey::updateHook()
         }
     break;
     case STRAFE_FINISHED:
+		strafe_finished_bool=true;
         started_servoing = false;
         started_cutting = true;
         strafed_over_180_degrees = false;
         previous_state=current_state;
 		new_state=true;
         if(buoyfound){
-            current_state=MOVING_TO_CUTTING_DISTANCE;
-            command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor );
+//            current_state=MOVING_TO_CUTTING_DISTANCE;
+//            command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor );
+			command=commander.centerBuoyHeadingFixed(buoy, ot, _buoy_depth, _maxX, servoing_rbs.getYaw());
         }else{
 		    re_search_start=base::Time::now();
 		    current_state=RE_SEARCHING_BUOY;

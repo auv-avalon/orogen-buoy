@@ -38,6 +38,7 @@ namespace buoy {
 		bool new_state;
 		bool strafe_to_angle;
 		bool angle_arrived;
+		bool strafe_finished_bool;
 		double target_heading;
 		base::Time cutting_start;
 		base::Time re_search_start;

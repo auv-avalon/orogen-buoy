@@ -61,9 +61,6 @@ task_context "Survey" do
    # P r o p e r t i e s 
    # --------------------------------------------------------------------------
 
-   property("endless_strafe","bool", true).
-		doc("if true avalon strafes until it gets another command.")
-
    property("max_buoy_distance", "double", 2.0).
         doc("maximum buoy distance in m")
  
