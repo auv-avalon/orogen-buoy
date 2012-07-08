@@ -63,7 +63,7 @@ bool Detector::startHook()
     previous_state=NO_BUOY_FOUND;
     current_state=NO_BUOY_FOUND;
 	state(current_state);
-    
+
 	detector.configureHoughThreshold(_houghTh);
 //	detector.configureEdgeThreshold(edgeTh);servoing_rbs
 
@@ -99,12 +99,12 @@ void Detector::updateHook()
 
 	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get());
 	filter.feed(result);
- 	
+
 	BuoyFeatureVector vector = filter.process();
 
 	//licht, boje und state auf initial stellen (boje nicht gefunden)
 	bool light_on = false;
-	
+
 	feature::Buoy buoy = feature::Buoy(0,0,-1);
 	current_state = NO_BUOY_FOUND;
 	//wenn die boje gefunden wurde schreibe sie raus
@@ -121,7 +121,7 @@ void Detector::updateHook()
 		state(current_state);
 		previous_state=current_state;
 	}
-	
+
 	if(_debug){
 		frame_helper::FrameHelper fh = frame_helper::FrameHelper();
 		base::samples::frame::Frame* h_p = hframe.write_access();

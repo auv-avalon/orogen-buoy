@@ -155,13 +155,13 @@ task_context "Detector" do
    property("houghTh", "int", 25).
         doc("Hough threshold.")
 
-   property("hValue", "int", 55).
+   property("hValue", "int", 65).
         doc("Buoy hue value.")
 
    property("vValue", "int", 40).
         doc("Buoy hue value.")
 
-   property("sValue", "int", 95).
+   property("sValue", "int", 55).
         doc("Buoy saturation value.")
 
    property("steps", "int", 5).
@@ -182,19 +182,19 @@ task_context "Detector" do
    property("roi_x", "double", 0).
 		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
 
-   property("roi_y", "double", 0).
+   property("roi_y", "double", -0.2).
 		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
 
-   property("roi_width", "double", 2.0).
+   property("roi_width", "double", 3.0).
 		doc("for light detection: retion of interrest width")
 
-   property("roi_height", "double", 1.0).
+   property("roi_height", "double", 3.0).
 		doc("for light detection: retion of interrest height")
 
    property("val_th", "int", 254).
 		doc("")
 
-   property("sat_th", "int", 0).
+   property("sat_th", "int", 55).
 		doc("")
 
    property("debug", "bool", 1).
