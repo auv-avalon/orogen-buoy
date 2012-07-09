@@ -48,8 +48,12 @@ bool Survey::configureHook()
 
 bool Survey::startHook()
 {
-    if (! SurveyBase::startHook())
-        return false;
+    if (! SurveyBase::startHook()){
+   		std::cout<<"startHook: FALSE"<<std::endl;
+		return false;
+	}else{
+		std::cout<<"startHook: TRUE"<<std::endl;
+	}
     commander = CommandCreator(_max_buoy_distance.get());
 
     previous_state=BUOY_SEARCH;

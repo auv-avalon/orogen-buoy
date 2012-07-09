@@ -55,8 +55,12 @@ bool Detector::configureHook()
 }
 bool Detector::startHook()
 {
-    if (!DetectorBase::startHook())
+    if (!DetectorBase::startHook()){
+   		std::cout<<"startHook: FALSE"<<std::endl;
 		return false;
+	}else{
+		std::cout<<"startHook: TRUE"<<std::endl;
+	}
    	double r = _buoy_radius;
    	posestimator = BuoyPosEstimator();
 
