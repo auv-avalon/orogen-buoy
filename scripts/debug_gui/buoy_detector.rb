@@ -159,11 +159,16 @@ class BuoyDetector
 		roi_height = @buoy_task.roi_height
 
 		p1_x = sample.image_x-(roi_x * sample.image_radius) - (roi_width*sample.image_radius)/2
-		p1_y = sample.image_y- sample.image_radius + (roi_y*sample.image_radius) -(roi_height*sample.image_radius)
+		p1_y = sample.image_y- sample.image_radius - (roi_y*sample.image_radius) -(roi_height*sample.image_radius)
+		dif = 0;		
+		if p1_y<10
+			dif = (10- p1_y);
+			p1_y = 10
+		end
 		p2_x = p1_x+(roi_width*sample.image_radius)
 		p2_y = p1_y
 		p3_x = p2_x
-		p3_y = p1_y + (roi_height*sample.image_radius)
+		p3_y = p1_y + (roi_height*sample.image_radius)-dif
 		p4_x = p1_x
 		p4_y = p3_y
 		
