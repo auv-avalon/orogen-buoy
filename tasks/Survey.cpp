@@ -74,12 +74,14 @@ bool Survey::startHook()
 
 void Survey::updateHook()
 {
+	commander.setGoodDist(_max_buoy_distance.get());
     SurveyBase::updateHook();
 
 	_orientation_samples.read(ot);
 
     base::AUVPositionCommand command;
-    command.heading=command.x=command.y=command.z=0;
+    command.heading=command.x=command.y=0;
+	command.z=ot.getPose().position[2];
 
 	//if the property is true, change to STRAFE_FINISHED-state
 	bool force=false;									/**** ACHTUNG!!!! Chris hat hier _force_cutting mit irgend einem bool connected!!!  ****/
@@ -394,7 +396,9 @@ void Survey::updateHook()
         state(current_state);
     }
     new_state=false;
-
+	
+	//command-z_offset dazu addieren
+	command.z+=_z_offset;
     //if(buoyfound) last_command.push_back(command);;
         _relative_position.write(command);
 }
