@@ -65,7 +65,7 @@ task_context "Survey" do
         doc("maximum buoy distance in m")
  
    property("strafe_intensity", "double", -0.8).
-        doc("intensity and direction of strafing (negative is right).");
+        doc("intensity and direction of strafing (negative is right).")
 
    property("steps", "int", 5).
         doc("Step size to detect V value.")
@@ -94,17 +94,20 @@ task_context "Survey" do
    property("cutting_time", "int", 53).
         doc("time for the cutting-action in seconds.")
 
-   property("cutting_hight", "double", -0.25)
+   property("cutting_hight", "double", -0.25).
         doc("how much higher should he go to cut the buoy.")
 
-   property("strafe_angle", "double", 0.95)
+   property("strafe_angle", "double", 0.95).
 	doc("the angle that is to strafe around the buoy and bagwards. it has to be 0<x<1, where the angle is x*pi where 1*pi=180°.")
 
-   property("strafe_around", "bool", 0)
+   property("strafe_around", "bool", 0).
 	doc("if it is true the strafe_angle will be ignored and the auv will strafe in a hole cycle around the buoy.") 
 
-   property("cutting_wait_time", "int", 60)
+   property("cutting_wait_time", "int", 60).
 	doc("time in seconds to wait in moving_to_cutting_distance before cutting.")
+
+   property("z_offset", "double", 0).
+	doc("the offset is permanently added to the z-command")
 
    port_driven 'input_buoy'
 
