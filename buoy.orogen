@@ -182,7 +182,7 @@ task_context "Detector" do
    property("roi_x", "double", 0).
 		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
 
-   property("roi_y", "double", -0.2).
+   property("roi_y", "double", 0.2).
 		doc("for light detection: relative region of interrest koordinate as factor of buoy-radius")
 
    property("roi_width", "double", 3.0).
