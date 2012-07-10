@@ -40,6 +40,7 @@ namespace buoy {
 		bool angle_arrived;
 		bool strafe_finished_bool;
 		double target_heading;
+		base::AUVMotionCommand target_heading_command;
 		base::Time cutting_start;
 		base::Time re_search_start;
 

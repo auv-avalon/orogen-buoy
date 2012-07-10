@@ -92,6 +92,10 @@ void Survey::updateHook()
 		new_state=true;
 	}*/
 	//wenn ein target-winkel übergeben wird, gehe zu diesem winkel
+	if(_motion_command.read(target_heading_command) == RTT::NewData && current_state == STRAFE_FINISHED){
+		target_heading = target_heading_command.heading;
+		strafe_to_angle=true;
+	}
 	if(_target_angle_input.read(target_heading) == RTT::NewData){
 		strafe_to_angle=true;
 	}
@@ -125,7 +129,7 @@ void Survey::updateHook()
     switch(current_state)
     {
     case BUOY_SEARCH:
-        if (buoyfound) {
+        if (buoyfound && ot.getPose().position[2]<_buoy_depth+0.5) {
             command=commander.centerBuoy(buoy,ot, _buoy_depth, _maxX, _headingFactor);
             previous_state=current_state;
             current_state=BUOY_DETECTED;
@@ -398,7 +402,7 @@ void Survey::updateHook()
 	
 	//command-z_offset dazu addieren
 	if(command.z==0)
-		command.z=ot.getPose().position[2];
+		command.z=_buoy_depth;//ot.getPose().position[2];
 	else if(command.z!=_buoy_depth)
 		command.z+=_z_offset;
     //if(buoyfound) last_command.push_back(command);;
