@@ -273,7 +273,7 @@ void Survey::updateHook()
     case STRAFE_FINISHED:
 		strafe_finished_bool=true;
         started_servoing = false;
-        started_cutting = true;
+        //started_cutting = true;
         strafed_over_180_degrees = false;
         previous_state=current_state;
 		new_state=true;
