@@ -398,7 +398,7 @@ void Survey::updateHook()
 	
 	//command-z_offset dazu addieren
 	if(command.z==0)
-		command.z=ot.getPose().position[2];
+		command.z=_buoy_depth;
 	else if(command.z!=_buoy_depth)
 		command.z+=_z_offset;
     //if(buoyfound) last_command.push_back(command);;
