@@ -277,10 +277,8 @@ void Survey::updateHook()
     case STRAFE_FINISHED:
 		strafe_finished_bool=true;
         started_servoing = false;
-        started_cutting = true;
+//        started_cutting = true;
         strafed_over_180_degrees = false;
-        previous_state=current_state;
-		new_state=true;
         if(buoyfound){
 //            current_state=MOVING_TO_CUTTING_DISTANCE;
 //            command=commander.centerBuoy(buoy,ot,_buoy_depth, _maxX, _headingFactor );
@@ -295,6 +293,8 @@ void Survey::updateHook()
         }else{
 		    re_search_start=base::Time::now();
 		    current_state=RE_SEARCHING_BUOY;
+			previous_state=current_state;
+			new_state=true;
 		}    
     break;
     case MOVING_TO_CUTTING_DISTANCE:
