@@ -93,10 +93,10 @@ void Detector::updateHook()
     if( !fp->isRGB()) {
 	frame.init(fp->getWidth(),fp->getHeight(),8,base::samples::frame::MODE_RGB);
         frameHelper.convertColor(*fp, frame);
-        image = IplImage(frame.convertToCvMat());
+        image = IplImage(frame_helper::FrameHelper::convertToCvMat(frame));
     } else {
         frame.init(*fp,true);
-        image = IplImage(fp->convertToCvMat());
+        image = IplImage(frame_helper::FrameHelper::convertToCvMat(*fp));
     }
 
 	filter.setMaxage((double)_filter_timeout);
