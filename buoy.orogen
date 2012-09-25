@@ -13,7 +13,7 @@ using_library "opencv"
 using_library "frame_helper"
 using_library "visual_detectors"
 import_types_from "base"
-import_types_from "avalon_base"
+import_types_from "avalon_base/feature.h"
 
 task_context "Survey" do
    # --------------------------------------------------------------------------
