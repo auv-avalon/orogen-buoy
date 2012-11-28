@@ -309,7 +309,7 @@ void Survey::updateHook()
             double y_diff = sqrt(buoy.world_coord[1]*buoy.world_coord[1]);
             double z_diff = buoy.world_coord[2];
 	//wenn die Buoy noch zentral ist und die Zeit abgelaufen ist
-	    	cout << "moving_to_cutting_distance - Zeit: " << seconds;
+            std::cout << "moving_to_cutting_distance - Zeit: " << seconds;
             if(x_diff<_good_x*0.7 && y_diff<_good_y_z*0.5 && z_diff>0 && seconds>_cutting_wait_time){ 
 				base::Pose p = ot.getPose();
 				buoy_depth = p.position[2];
