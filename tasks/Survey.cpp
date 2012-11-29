@@ -117,7 +117,8 @@ void Survey::updateHook()
 	
 //HIER DIE BOJE EINLESEN UM SIE ZU BENUTZEN
 	feature::Buoy buoy;
-	_input_buoy.read(buoy);
+	buoy.image_radius = -1;
+        _input_buoy.read(buoy);
 	bool buoyfound=false;
 	if(buoy.image_radius>=0){
 		buoyfound=true;								//#########   ACHTUNG, NOCH BEARBEITEN!!!!!

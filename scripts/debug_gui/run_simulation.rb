@@ -28,7 +28,7 @@ Orocos.run do # ("buoy_test" => nil, :wait => 20) do
   gui = BuoyDetector.new(camera.frame, detector.s_image, detector.h_image,detector)
   gui.show
 
-  Vizkit.display detector.buoy
+  Vizkit.display detector
 
   Vizkit.exec
 

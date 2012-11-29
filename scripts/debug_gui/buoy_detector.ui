@@ -19,7 +19,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="ImageView" name="main_image">
+        <widget class="ImageViewOld" name="main_image">
          <property name="toolTip">
           <string>ImageView</string>
          </property>
@@ -29,7 +29,7 @@
         </widget>
        </item>
        <item>
-        <widget class="ImageView" name="s_image">
+        <widget class="ImageViewOld" name="s_image">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -60,7 +60,7 @@
         </widget>
        </item>
        <item>
-        <widget class="ImageView" name="h_image">
+        <widget class="ImageViewOld" name="h_image">
          <property name="toolTip">
           <string>ImageView</string>
          </property>
@@ -600,7 +600,7 @@
            </property>
           </widget>
          </widget>
-         <widget class="ImageView" name="light_image">
+         <widget class="ImageViewOld" name="light_image">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -633,9 +633,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageView</class>
+   <class>ImageViewOld</class>
    <extends>MultiWidget</extends>
-   <header>image_view_widget/ImageView.h</header>
+   <header>image_view_widget/ImageViewOld.h</header>
   </customwidget>
   <customwidget>
    <class>MultiWidget</class>
