@@ -1,14 +1,14 @@
 #! /usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-require 'buoy_detector.rb'
+require './buoy_detector.rb'
 require 'orocos/log'
 #require 'type_specialize'
 
 include Orocos
 
 
-Orocos::CORBA.name_service = "192.168.128.50"
+#Orocos::CORBA.name_service = "192.168.128.50"
 Orocos.initialize
 
 Orocos.run do #("buoy_test" => nil, :wait => 20) do
