@@ -22,13 +22,17 @@ using namespace buoy;
 Detector::Detector(std::string const& name, TaskCore::TaskState initial_state)
     : DetectorBase(name, initial_state)
 {
+    std::cout <<"init" << std::endl;
 //	h_frame = new base::samples::frame::Frame();
 //	s_frame = new base::samples::frame::Frame();
 //	h_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
 //	s_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
 	hframe.reset(new base::samples::frame::Frame());
 	sframe.reset(new base::samples::frame::Frame());
-	lframe.reset(new base::samples::frame::Frame());
+	vframe.reset(new base::samples::frame::Frame());
+	grayframe.reset(new base::samples::frame::Frame());
+	houghframe.reset(new base::samples::frame::Frame());
+	debugframe.reset(new base::samples::frame::Frame());
 }
 
 Detector::Detector(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state)
@@ -49,12 +53,14 @@ Detector::~Detector()
 
 bool Detector::configureHook()
 {
+    std::cout <<"configure" << std::endl;
      if (! DetectorBase::configureHook())
          return false;
      return true;
 }
 bool Detector::startHook()
 {
+    std::cout <<"start" << std::endl;
     if (!DetectorBase::startHook()){
    		std::cout<<"startHook: FALSE"<<std::endl;
 		return false;
@@ -68,8 +74,6 @@ bool Detector::startHook()
     current_state=NO_BUOY_FOUND;
 	state(current_state);
 
-	detector.configureHoughThreshold(_houghTh);
-//	detector.configureEdgeThreshold(edgeTh);servoing_rbs
 
 	filter.setBufferSize(buoys_buffer_size);
     filter.setMinSize(buoys_buffer_size_min);
@@ -83,6 +87,29 @@ bool Detector::startHook()
 
 void Detector::updateHook()
 {
+    std::cout <<"update" << std::endl;
+    std::cout <<"configure" << std::endl;
+	detector.configureHoughAccumulatorThresholdH(_hHoughAccumulatorThreshold.get());
+	detector.configureHoughAccumulatorThresholdS(_sHoughAccumulatorThreshold.get());
+	detector.configureHoughAccumulatorThresholdV(_vHoughAccumulatorThreshold.get());
+	detector.configureHoughEdgeThresholdH(_hHoughEdgeThreshold.get());
+	detector.configureHoughEdgeThresholdS(_sHoughEdgeThreshold.get());
+	detector.configureHoughEdgeThresholdV(_vHoughEdgeThreshold.get());
+
+	detector.configureHoughCircleMin(_houghMinCircle.get());
+	detector.configureHoughCircleMax(_houghMaxCircle.get());
+
+        detector.configureHValueMin(_hValueMin.get());
+        detector.configureSValueMin(_sValueMin.get());
+        detector.configureVValueMin(_vValueMin.get());
+
+        detector.configureHValueMax(_hValueMax.get());
+        detector.configureSValueMax(_sValueMax.get());
+        detector.configureVValueMax(_vValueMax.get());
+
+        detector.configureDebug(_debug.get());
+        detector.configureDebugGray(_hsv_gray.get());
+        detector.configureDebugHough(_hough_debug_h.get(), _hough_debug_s.get(), _hough_debug_v.get());
 	DetectorBase::updateHook();
 	if (_frame.read(fp) != RTT::NewData) {
 		return;
@@ -101,7 +128,10 @@ void Detector::updateHook()
 
 	filter.setMaxage((double)_filter_timeout);
 
-	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get());
+    std::cout <<"buoy detection" << std::endl;
+	BuoyFeatureVector result = detector.buoyDetection(&image);
+        
+    std::cout <<"feed" << std::endl;
 	filter.feed(result);
 
 	BuoyFeatureVector vector = filter.process();
@@ -116,7 +146,8 @@ void Detector::updateHook()
         buoy=vector.front();
 		posestimator.estimateAuvKoordinates(buoy, frame, _buoy_radius.get());
 		current_state = BUOY_FOUND;
-		light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
+		//light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
+                light_on = false;
     }
 	_buoy.write(buoy);
 	_light.write(light_on);
@@ -126,19 +157,45 @@ void Detector::updateHook()
 		previous_state=current_state;
 	}
 
-	if(_debug){
+	if(_debug.get()){
+    std::cout <<"writeout" << std::endl;
+    std::cout << "1" << std::endl;
 		base::samples::frame::Frame* h_p = hframe.write_access();
 		base::samples::frame::Frame* s_p = sframe.write_access();
-		base::samples::frame::Frame* l_p = lframe.write_access();
-		frame_helper::FrameHelper::copyMatToFrame(detector.getHshaded(),*h_p);
+		base::samples::frame::Frame* v_p = vframe.write_access();
+		base::samples::frame::Frame* hsv_debug_p = grayframe.write_access();
+		base::samples::frame::Frame* hough_debug_p = houghframe.write_access();
+		base::samples::frame::Frame* debug_p = debugframe.write_access();
+
+    std::cout << "2" << std::endl;
+    std::cout << "2.1" << std::endl;
+		frame_helper::FrameHelper::copyMatToFrame(detector.getHplane(),*h_p);
+    std::cout << "2.2" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getSplane(),*s_p);
-		frame_helper::FrameHelper::copyMatToFrame(detector.getDebugImage(),*l_p);
+    std::cout << "2.3" << std::endl;
+		frame_helper::FrameHelper::copyMatToFrame(detector.getVplane(),*v_p);
+    std::cout << "2.4" << std::endl;
+		frame_helper::FrameHelper::copyMatToFrame(detector.getHSVDebug(),*hsv_debug_p);
+    std::cout << "2.5" << std::endl;
+		frame_helper::FrameHelper::copyMatToFrame(detector.getHoughDebug(),*hough_debug_p);
+    std::cout << "2.6" << std::endl;
+		frame_helper::FrameHelper::copyMatToFrame(detector.getDebugImage(),*debug_p);
+
+    std::cout << "3" << std::endl;
 		hframe.reset(h_p);
 		sframe.reset(s_p);
-		lframe.reset(l_p);
+                vframe.reset(v_p);
+                grayframe.reset(hsv_debug_p);
+                houghframe.reset(hough_debug_p);
+		debugframe.reset(debug_p);
+
+    std::cout << "4" << std::endl;
 		_h_image.write(hframe);
 		_s_image.write(sframe);
-		_light_image.write(lframe);
+                _v_image.write(vframe);
+                _gray_debug_image.write(grayframe);
+                _hough_debug_image.write(houghframe);
+		_debug_image.write(debugframe);
 		_other_buoys.write(vector);
 	}
 }

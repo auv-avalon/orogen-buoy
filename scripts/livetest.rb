@@ -2,7 +2,7 @@ require 'orocos'
 require 'vizkit'
 include Orocos
 
-Orocos::CORBA.name_service = "192.168.128.51"
+#Orocos::CORBA.name_service = "192.168.128.51"
 
 
 Orocos.initialize
@@ -19,11 +19,14 @@ Orocos.run("buoy_test" => nil, :wait => 20) do
   camera.frame.connect_to detector.frame
   detector.buoy.connect_to survey.input_buoy
 
+  #detector.sValue = 170
+
+  
   detector.configure
   detector.start
 
-  survey.configure
-  survey.start
+  #survey.configure
+  #survey.start
 
    Vizkit.display camera.frame
 
