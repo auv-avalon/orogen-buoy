@@ -140,18 +140,20 @@ task_context "Detector" do
 
    output_port("s_image", ro_ptr("base::samples::frame::Frame")).
 		doc("only for debugging")
-	
+
+   output_port("v_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
+   output_port("gray_debug_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
+
+   output_port("hough_debug_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
+
    output_port("other_buoys","std::vector</avalon/feature/Buoy>").
 		doc("only for debugging")
 
-   output_port("light_image", ro_ptr("base::samples::frame::Frame")).
+   output_port("debug_image", ro_ptr("base::samples::frame::Frame")).
 		doc("the image which is shown in the light_image field in the debug-gui")
-
-   output_port("binary_image", ro_ptr("base::samples::frame::Frame"))
-   
-   output_port("grayscale_image", ro_ptr("base::samples::frame::Frame"))
-   
-   output_port("debug_image", ro_ptr("base::samples::frame::Frame"))
 
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
@@ -159,33 +161,47 @@ task_context "Detector" do
 
    property("buoy_radius", "double", 0.05).  #bei boye mit d=25cm ist wert von 0.05 realistisch. wieso?
         doc("radius of the buoy in m")
-
-   property("houghTh", "int", 25).
+   #Properties for the Hough
+   property("hHoughAccumulatorThreshold", "int", 25).
+        doc("Hough threshold.")
+   property("sHoughAccumulatorThreshold", "int", 25).
+        doc("Hough threshold.")
+   property("vHoughAccumulatorThreshold", "int", 25).
         doc("Hough threshold.")
 
-   property("hValue", "int", 65).
+   property("hHoughEdgeThreshold", "int", 25).
+        doc("Hough threshold.")
+   property("sHoughEdgeThreshold", "int", 25).
+        doc("Hough threshold.")
+   property("vHoughEdgeThreshold", "int", 25).
+        doc("Hough threshold.")
+
+   property("houghMinCircle", "int", 40).
         doc("Buoy hue value.")
    
-   property("hValueMin", "int", 65)
-   property("hValueMax", "int", 255)
+   property("houghMaxCircle", "int", 55).
+        doc("Buoy saturation value.")
 
-   property("vValue", "int", 40).
+   #Property for the HSV
+   property("hValueMin", "int", 65).
+        doc("Buoy hue value.")
+   property("sValueMin", "int", 55).
+        doc("Buoy saturation value.")
+   property("vValueMin", "int", 40).
         doc("Buoy hue value.")
    
-   property("vValueMin", "int", 40)
-   property("vValueMax", "int", 255)
 
-   property("sValue", "int", 55).
+   property("hValueMax", "int", 65).
+        doc("Buoy hue value.")
+   property("vValueMax", "int", 40).
+        doc("Buoy hue value.")
+   property("sValueMax", "int", 55).
         doc("Buoy saturation value.")
    
-   property("sValueMin", "int", 55)
-   property("sValueMax", "int", 255)
 
-   property("steps", "int", 5).
-        doc("Step size to detect V value.")
-  
-   property("edgeTh", "int", 35).
-        doc("Buoy V value.")
+   property("hSmooth", "int", 0)
+   property("sSmooth", "int", 0)
+   property("vSmooth", "int", 0)
 
    property("debug_gui", "bool", true).
         doc("Sets test mode.")
@@ -208,14 +224,15 @@ task_context "Detector" do
    property("roi_height", "double", 3.0).
 		doc("for light detection: retion of interrest height")
 
-   property("val_th", "int", 254).
-		doc("")
 
-   property("sat_th", "int", 55).
-		doc("")
 
    property("debug", "bool", 1).
 		doc("debugging or not?")
+   property("hsv_gray", "int", 0)
+   property("hough_debug_h", "bool", 0)
+   property("hough_debug_s", "bool", 0)
+   property("hough_debug_v", "bool", 0)
+            
 
    port_driven("frame")
 end

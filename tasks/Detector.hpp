@@ -43,7 +43,10 @@ namespace buoy {
 		frame_helper::FrameHelper frameHelper;
 		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> hframe;
 		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> sframe;
-		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> lframe;	//light-frame
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> vframe;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> grayframe;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> houghframe;
+		RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> debugframe;	//light-frame
 
 
     public:

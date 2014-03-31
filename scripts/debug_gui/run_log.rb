@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-require 'buoy_detector.rb'
+require './buoy_detector.rb'
 require 'orocos/log'
 #require 'type_specialize'
 
@@ -16,7 +16,7 @@ if ARGV.size < 1
   puts "No Log File in use"
   exit 1
 end
-Orocos.run ("buoy_test" => nil, :wait => 20) do
+Orocos.run ("buoy_test") do
   #Orocos.log_all_ports
   detector = Orocos::TaskContext.get "buoy_detector"
   log = Orocos::Log::Replay.open(ARGV[0], Typelib::Registry.new)
