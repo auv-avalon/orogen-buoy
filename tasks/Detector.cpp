@@ -101,7 +101,8 @@ void Detector::updateHook()
 
 	filter.setMaxage((double)_filter_timeout);
 
-	BuoyFeatureVector result = detector.buoyDetection(&image, _hValue.get(), _sValue.get());
+	BuoyFeatureVector result = detector.buoyDetection(&image, _hValueMin.get(), _sValueMin.get());
+        std::cout << "H-Value-Min: " << _hValueMin.get() << "          S-Value-Min: " << _sValueMin.get() << std::endl;
 	filter.feed(result);
 
 	BuoyFeatureVector vector = filter.process();
@@ -139,6 +140,9 @@ void Detector::updateHook()
 		_h_image.write(hframe);
 		_s_image.write(sframe);
 		_light_image.write(lframe);
+		_binary_image.write(hframe);
+		_grayscale_image.write(sframe);
+		_debug_image.write(lframe);
 		_other_buoys.write(vector);
 	}
 }

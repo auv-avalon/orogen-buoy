@@ -147,6 +147,11 @@ task_context "Detector" do
    output_port("light_image", ro_ptr("base::samples::frame::Frame")).
 		doc("the image which is shown in the light_image field in the debug-gui")
 
+   output_port("binary_image", ro_ptr("base::samples::frame::Frame"))
+   
+   output_port("grayscale_image", ro_ptr("base::samples::frame::Frame"))
+   
+   output_port("debug_image", ro_ptr("base::samples::frame::Frame"))
 
    # --------------------------------------------------------------------------
    # P r o p e r t i e s 
@@ -160,12 +165,21 @@ task_context "Detector" do
 
    property("hValue", "int", 65).
         doc("Buoy hue value.")
+   
+   property("hValueMin", "int", 65)
+   property("hValueMax", "int", 255)
 
    property("vValue", "int", 40).
         doc("Buoy hue value.")
+   
+   property("vValueMin", "int", 40)
+   property("vValueMax", "int", 255)
 
    property("sValue", "int", 55).
         doc("Buoy saturation value.")
+   
+   property("sValueMin", "int", 55)
+   property("sValueMax", "int", 255)
 
    property("steps", "int", 5).
         doc("Step size to detect V value.")
