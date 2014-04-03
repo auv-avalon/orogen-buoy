@@ -17,11 +17,16 @@ if ARGV.size < 1
   exit 1
 end
 Orocos.run ("buoy_test") do
+    
+  Orocos.conf.load_dir(File.join(ENV['AUTOPROJ_PROJECT_BASE'],"bundles", "avalon", "config", "orogen")) 
   #Orocos.log_all_ports
   detector = Orocos::TaskContext.get "buoy_detector"
   log = Orocos::Log::Replay.open(ARGV[0], Typelib::Registry.new)
 
   log.front_camera.frame.connect_to detector.frame
+
+  Orocos.conf.apply(detector,['default'])
+  detector.debug_gui = true
 
   detector.configure
   detector.start

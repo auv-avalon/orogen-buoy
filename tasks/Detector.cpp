@@ -107,11 +107,27 @@ void Detector::updateHook()
         detector.configureSValueMax(_sValueMax.get());
         detector.configureVValueMax(_vValueMax.get());
 
+        //if a smooth value % 2 = 0 you get an ocv error so we catch it hear.
+        if(!(_hSmooth.get() % 2)){
+            std::cout << "Gerader Wert für hSmooth!" << std::endl;
+            _hSmooth.set(_hSmooth.get()+1);
+        }
+        if(! (_sSmooth.get() % 2)){
+            _sSmooth.set(_sSmooth.get()+1);
+        }
+        if(! (_vSmooth.get() % 2)){
+            _vSmooth.set(_vSmooth.get()+1);
+        }
+
+        detector.configureHSmooth(_hSmooth.get());
+        detector.configureSSmooth(_sSmooth.get());
+        detector.configureVSmooth(_vSmooth.get());
+        
         detector.configureDebug(_debug.get());
         detector.configureDebugGray(_hsv_gray.get());
         detector.configureDebugHough(_hough_debug_h.get(), _hough_debug_s.get(), _hough_debug_v.get());
 	DetectorBase::updateHook();
-	if (_frame.read(fp) != RTT::NewData) {
+        if (_frame.read(fp) != RTT::NewData) {
 		return;
 	}
 
@@ -190,6 +206,17 @@ void Detector::updateHook()
     std::cout << "4" << std::endl;
 		_h_image.write(hframe);
 		_s_image.write(sframe);
+                _v_image.write(vframe);
+                if(_hsv_gray.get() == 0){
+                    _binary_debug_image.write(hframe);
+                } else if (_hsv_gray.get() == 1){
+                    _binary_debug_image.write(sframe);
+                }else{
+                    _binary_debug_image.write(vframe);
+                }
+                _debug_image.write(debugframe);
+                _gray_debug_image.write(grayframe);
+                _hough_debug_image.write(houghframe);
 		_other_buoys.write(vector);
 	}
 }

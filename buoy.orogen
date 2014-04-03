@@ -143,6 +143,8 @@ task_context "Detector" do
 
    output_port("v_image", ro_ptr("base::samples::frame::Frame")).
 		doc("only for debugging")
+   output_port("binary_debug_image", ro_ptr("base::samples::frame::Frame")).
+		doc("only for debugging")
    output_port("gray_debug_image", ro_ptr("base::samples::frame::Frame")).
 		doc("only for debugging")
 
@@ -199,9 +201,9 @@ task_context "Detector" do
         doc("Buoy saturation value.")
    
 
-   property("hSmooth", "int", 0)
-   property("sSmooth", "int", 0)
-   property("vSmooth", "int", 0)
+   property("hSmooth", "int", 1)
+   property("sSmooth", "int", 1)
+   property("vSmooth", "int", 1)
 
    property("debug_gui", "bool", true).
         doc("Sets test mode.")

@@ -15,95 +15,34 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout_3" columnstretch="2,1">
+    <layout class="QGridLayout" name="gridLayout_3" columnstretch="3,1,1">
      <item row="0" column="0">
-      <widget class="ImageView" name="image_front_camera" native="true"/>
+      <widget class="ImageView" name="image_front_camera"/>
      </item>
      <item row="1" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="ImageView" name="image_binary" native="true"/>
+        <widget class="ImageView" name="image_binary"/>
        </item>
        <item>
-        <widget class="ImageView" name="image_grayscale" native="true"/>
+        <widget class="ImageView" name="image_grayscale"/>
        </item>
       </layout>
      </item>
      <item row="0" column="1">
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>use Values:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>H-Value</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_3">
-           <property name="text">
-            <string>S-Value</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox">
-           <property name="text">
-            <string>V-Value</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>show Detections:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
-         <item>
-          <widget class="QCheckBox" name="checkBox_5">
-           <property name="text">
-            <string>H-Value</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_6">
-           <property name="text">
-            <string>S-Value</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_4">
-           <property name="text">
-            <string>V-Value</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QHBoxLayout" name="horizontalLayout_10"/>
        </item>
       </layout>
      </item>
      <item row="2" column="0">
-      <widget class="ImageView" name="image_debug" native="true"/>
+      <widget class="ImageView" name="image_debug"/>
      </item>
      <item row="1" column="1">
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <item>
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QComboBox" name="debugTypeComboBox">
          <item>
           <property name="text">
            <string>H-Frame</string>
@@ -222,12 +161,12 @@
        <item row="0" column="0">
         <widget class="QLabel" name="minRadiusLabel">
          <property name="text">
-          <string>minRadius</string>
+          <string>houghMinCircle</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QSpinBox" name="minRadiusSpinBox">
+        <widget class="QSpinBox" name="houghMinCircleSpinBox">
          <property name="maximum">
           <number>1000</number>
          </property>
@@ -236,12 +175,12 @@
        <item row="1" column="0">
         <widget class="QLabel" name="maxRadiusLabel">
          <property name="text">
-          <string>maxRadius</string>
+          <string>houghMaxCircle</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSpinBox" name="maxRadiusSpinBox">
+        <widget class="QSpinBox" name="houghMaxCircleSpinBox">
          <property name="maximum">
           <number>1000</number>
          </property>
@@ -330,6 +269,173 @@
           <number>255</number>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="2">
+      <layout class="QFormLayout" name="formLayout_4">
+       <item row="1" column="0">
+        <widget class="QLabel" name="hSmothLabel">
+         <property name="text">
+          <string>hSmooth</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="hSmoothSpinBox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99</number>
+         </property>
+         <property name="singleStep">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="sSmoothLabel">
+         <property name="text">
+          <string>sSmooth</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="sSmoothSpinBox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99</number>
+         </property>
+         <property name="singleStep">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="vSmoothLabel">
+         <property name="text">
+          <string>vSmooth</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="vSmoothSpinBox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99</number>
+         </property>
+         <property name="singleStep">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>show Detections:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="hDebugCheckBox">
+         <property name="text">
+          <string>H-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="sDebugCheckBox">
+         <property name="text">
+          <string>S-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="vDebugCheckBox">
+         <property name="text">
+          <string>V-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>use Values:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_2">
+         <property name="text">
+          <string>H-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_3">
+         <property name="text">
+          <string>S-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>V-Value</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
