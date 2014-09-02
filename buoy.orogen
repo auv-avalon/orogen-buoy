@@ -14,7 +14,8 @@ using_library "frame_helper"
 using_library "visual_detectors"
 import_types_from "base"
 import_types_from "visual_detectors/Types.hpp"
-
+import_types_from "SonarDetectorTaskTypes.hpp"
+import_types_from "auv_control"
 task_context "Survey" do
    # --------------------------------------------------------------------------
    # BUOY_DETECTED:   found a buoy within a sequence of frames
@@ -237,6 +238,19 @@ task_context "Detector" do
             
 
    port_driven("frame")
+end
+
+task_context "ServoingOnWall" do 
+    input_port("buoy_samples", "/avalon/feature/Buoy")
+    input_port("wall_samples", "sonar_detectors::Wall")
+    input_port 'orientation_samples', 'base::samples::RigidBodyState'
+
+    output_port("world_cmd", "base::LinearAngular6DCommand")
+    output_port("aligned_position_cmd", "base::LinearAngular6DCommand")
+
+    states("BUOY_SERVOING", "PASSIVE_BUOY_SEARCHING")
+    error_states("WAIT_FOR_BUOY_SAMPLE", "WAIT_FOR_WALL_SAMPLE", "WAIT_FOR_ORIENTATION_SAMPLE" )
+    port_driven("buoy_samples")
 end
 
 deployment "buoy_test" do

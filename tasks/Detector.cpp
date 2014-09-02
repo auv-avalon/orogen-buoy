@@ -22,7 +22,7 @@ using namespace buoy;
 Detector::Detector(std::string const& name, TaskCore::TaskState initial_state)
     : DetectorBase(name, initial_state)
 {
-    std::cout <<"init" << std::endl;
+//    std::cout <<"init" << std::endl;
 //	h_frame = new base::samples::frame::Frame();
 //	s_frame = new base::samples::frame::Frame();
 //	h_frame.init(0,0,8,base::samples::frame::MODE_GRAYSCALE);
@@ -53,19 +53,19 @@ Detector::~Detector()
 
 bool Detector::configureHook()
 {
-    std::cout <<"configure" << std::endl;
+//    std::cout <<"configure" << std::endl;
      if (! DetectorBase::configureHook())
          return false;
      return true;
 }
 bool Detector::startHook()
 {
-    std::cout <<"start" << std::endl;
+//    std::cout <<"start" << std::endl;
     if (!DetectorBase::startHook()){
-   		std::cout<<"startHook: FALSE"<<std::endl;
+//   		std::cout<<"startHook: FALSE"<<std::endl;
 		return false;
 	}else{
-		std::cout<<"startHook: TRUE"<<std::endl;
+//		std::cout<<"startHook: TRUE"<<std::endl;
 	}
    	double r = _buoy_radius;
    	posestimator = BuoyPosEstimator();
@@ -87,8 +87,8 @@ bool Detector::startHook()
 
 void Detector::updateHook()
 {
-    std::cout <<"update" << std::endl;
-    std::cout <<"configure" << std::endl;
+//    std::cout <<"update" << std::endl;
+//    std::cout <<"configure" << std::endl;
 	detector.configureHoughAccumulatorThresholdH(_hHoughAccumulatorThreshold.get());
 	detector.configureHoughAccumulatorThresholdS(_sHoughAccumulatorThreshold.get());
 	detector.configureHoughAccumulatorThresholdV(_vHoughAccumulatorThreshold.get());
@@ -109,7 +109,7 @@ void Detector::updateHook()
 
         //if a smooth value % 2 = 0 you get an ocv error so we catch it hear.
         if(!(_hSmooth.get() % 2)){
-            std::cout << "Gerader Wert für hSmooth!" << std::endl;
+//            std::cout << "Gerader Wert für hSmooth!" << std::endl;
             _hSmooth.set(_hSmooth.get()+1);
         }
         if(! (_sSmooth.get() % 2)){
@@ -145,7 +145,7 @@ void Detector::updateHook()
 	filter.setMaxage((double)_filter_timeout);
 
 	BuoyFeatureVector result = detector.buoyDetection(&image);
-        std::cout << "H-Value-Min: " << _hValueMin.get() << "          S-Value-Min: " << _sValueMin.get() << std::endl;
+//        std::cout << "H-Value-Min: " << _hValueMin.get() << "          S-Value-Min: " << _sValueMin.get() << std::endl;
 	filter.feed(result);
 
 	BuoyFeatureVector vector = filter.process();
@@ -172,8 +172,6 @@ void Detector::updateHook()
 	}
 
 	if(_debug.get()){
-    std::cout <<"writeout" << std::endl;
-    std::cout << "1" << std::endl;
 		base::samples::frame::Frame* h_p = hframe.write_access();
 		base::samples::frame::Frame* s_p = sframe.write_access();
 		base::samples::frame::Frame* v_p = vframe.write_access();
@@ -181,21 +179,13 @@ void Detector::updateHook()
 		base::samples::frame::Frame* hough_debug_p = houghframe.write_access();
 		base::samples::frame::Frame* debug_p = debugframe.write_access();
 
-    std::cout << "2" << std::endl;
-    std::cout << "2.1" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getHplane(),*h_p);
-    std::cout << "2.2" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getSplane(),*s_p);
-    std::cout << "2.3" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getVplane(),*v_p);
-    std::cout << "2.4" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getHSVDebug(),*hsv_debug_p);
-    std::cout << "2.5" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getHoughDebug(),*hough_debug_p);
-    std::cout << "2.6" << std::endl;
 		frame_helper::FrameHelper::copyMatToFrame(detector.getDebugImage(),*debug_p);
 
-    std::cout << "3" << std::endl;
 		hframe.reset(h_p);
 		sframe.reset(s_p);
                 vframe.reset(v_p);
@@ -203,7 +193,6 @@ void Detector::updateHook()
                 houghframe.reset(hough_debug_p);
 		debugframe.reset(debug_p);
 
-    std::cout << "4" << std::endl;
 		_h_image.write(hframe);
 		_s_image.write(sframe);
                 _v_image.write(vframe);
