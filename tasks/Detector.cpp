@@ -107,6 +107,10 @@ void Detector::updateHook()
         detector.configureSValueMax(_sValueMax.get());
         detector.configureVValueMax(_vValueMax.get());
 
+        detector.configureUseH(_use_h.get());
+        detector.configureUseS(_use_s.get());
+        detector.configureUseV(_use_v.get());
+
         //if a smooth value % 2 = 0 you get an ocv error so we catch it hear.
         if(!(_hSmooth.get() % 2)){
 //            std::cout << "Gerader Wert für hSmooth!" << std::endl;

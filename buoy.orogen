@@ -235,7 +235,10 @@ task_context "Detector" do
    property("hough_debug_h", "bool", 0)
    property("hough_debug_s", "bool", 0)
    property("hough_debug_v", "bool", 0)
-            
+   
+   property("use_h", "bool", true)
+   property("use_s", "bool", true)
+   property("use_v", "bool", true)
 
    port_driven("frame")
 end
