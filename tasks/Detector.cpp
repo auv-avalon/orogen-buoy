@@ -192,6 +192,13 @@ void Detector::updateHook()
                 grayframe.reset(hsv_debug_p);
                 houghframe.reset(hough_debug_p);
 		debugframe.reset(debug_p);
+                
+                h_p->time = frame.time;
+                s_p->time = frame.time;
+                v_p->time = frame.time;
+                hsv_debug_p->time = frame.time;
+                hough_debug_p->time = frame.time;
+                debug_p->time = frame.time;
 
 		_h_image.write(hframe);
 		_s_image.write(sframe);
