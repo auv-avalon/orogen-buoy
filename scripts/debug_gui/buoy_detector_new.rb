@@ -118,6 +118,18 @@ class BuoyDetector
     @window.vDebugCheckBox.connect(SIGNAL('clicked(bool)')) do |value|
        @buoy_task.hough_debug_v = value
     end
+    @window.useHCheckBox.setChecked(@buoy_task.use_h)
+    @window.useHCheckBox.connect(SIGNAL('clicked(bool)')) do |value|
+       @buoy_task.use_h = value
+    end
+    @window.useSCheckBox.setChecked(@buoy_task.use_s)
+    @window.useSCheckBox.connect(SIGNAL('clicked(bool)')) do |value|
+       @buoy_task.use_s = value
+    end
+    @window.useVCheckBox.setChecked(@buoy_task.use_v)
+    @window.useVCheckBox.connect(SIGNAL('clicked(bool)')) do |value|
+       @buoy_task.use_v = value
+    end
     @window.debugTypeComboBox.connect(SIGNAL('currentIndexChanged(int)')) do |value|
        @buoy_task.hsv_gray = value
     end

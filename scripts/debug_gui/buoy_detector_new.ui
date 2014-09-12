@@ -404,21 +404,21 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="useHCheckBox">
          <property name="text">
           <string>H-Value</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="useSCheckBox">
          <property name="text">
           <string>S-Value</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="useVCheckBox">
          <property name="text">
           <string>V-Value</string>
          </property>
