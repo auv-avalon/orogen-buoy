@@ -74,7 +74,7 @@ void ServoingOnWall::updateHook()
 
         Eigen::Vector3d buoy_rel_pos_in_world = orientation.orientation * buoy.world_coord;
         //TODO: Distants als Property
-        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(wall_on_buoy_detection.wall_angle - (M_PI/2), Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(1,0,0));
+        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(wall_on_buoy_detection.wall_angle - (M_PI) + _angle_to_wall.get(), Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
         
         buoy.world_coord[0] = buoy.world_coord[0] - 0.8;
 

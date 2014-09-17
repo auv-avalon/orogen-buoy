@@ -150,9 +150,12 @@ void Detector::updateHook()
 
 	BuoyFeatureVector result = detector.buoyDetection(&image);
 //        std::cout << "H-Value-Min: " << _hValueMin.get() << "          S-Value-Min: " << _sValueMin.get() << std::endl;
-	filter.feed(result);
+        std::cout << "Size of BuoyVector result: " << result.size() << std::endl;
+        
+        filter.feed(result);
 
 	BuoyFeatureVector vector = filter.process();
+        std::cout << "Size of BuoyVector vector: " << result.size() << std::endl;
 
 	//licht, boje und state auf initial stellen (boje nicht gefunden)
 	bool light_on = false;
