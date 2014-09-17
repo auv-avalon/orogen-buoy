@@ -254,7 +254,9 @@ task_context "ServoingOnWall" do
     property("distance_to_buoy", "double", 1)
     property("angle_to_wall", "double", 0)
 
-    states("BUOY_SERVOING", "PASSIVE_BUOY_SEARCHING")
+    property("aligned_distance", "double", 0.5)
+
+    states("ALIGNED", "BUOY_SERVOING", "PASSIVE_BUOY_SEARCHING")
     error_states("WAIT_FOR_BUOY_SAMPLE", "WAIT_FOR_WALL_SAMPLE", "WAIT_FOR_ORIENTATION_SAMPLE" )
     port_driven("buoy_samples")
 end

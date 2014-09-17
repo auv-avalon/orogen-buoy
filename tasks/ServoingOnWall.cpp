@@ -67,18 +67,16 @@ void ServoingOnWall::updateHook()
     
     //TODO: Schwellwert als property
     if(buoy.validation > 0.8){
-        if(last_buoy_validation < 0.8 && state() != BUOY_SERVOING){
+        if(last_buoy_validation < 0.8 && state() != BUOY_SERVOING && state() != ALIGNED){
             wall_on_buoy_detection = wall;
             state(BUOY_SERVOING);
         }
 
         Eigen::Vector3d buoy_rel_pos_in_world = orientation.orientation * buoy.world_coord;
-        //TODO: Distants als Property
         Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(wall_on_buoy_detection.wall_angle - (M_PI) + _angle_to_wall.get(), Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
         
         buoy.world_coord[0] = buoy.world_coord[0] - 0.8;
 
-        //Eigen::Vector3d buoy_offset = (Eigen::AngleAxisd(wall.wall_angle - (M_PI/2), Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(3,0,0));
         aligned_cmd.linear = buoy.world_coord + buoy_offset;
         world_cmd.angular = Eigen::Vector3d::Zero();
         world_cmd.angular[2] = atan2(buoy_rel_pos_in_world(1), buoy_rel_pos_in_world(0));
@@ -87,7 +85,10 @@ void ServoingOnWall::updateHook()
         std::cout << "offset:      + " << buoy_offset.transpose() << std::endl;
         std::cout << "------------------------------------------------------" << std::endl;
         std::cout << "result:      + " << aligned_cmd.linear.transpose() << std::endl;
-
+        
+        if(world_cmd.linear.norm() < _aligned_distance.get() && state() != ALIGNED){
+            state(ALIGNED);
+        }
 
     } else {
         if(state() != PASSIVE_BUOY_SEARCHING){
