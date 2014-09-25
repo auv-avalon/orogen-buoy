@@ -131,7 +131,7 @@ void Detector::updateHook()
         detector.configureDebugGray(_hsv_gray.get());
         detector.configureDebugHough(_hough_debug_h.get(), _hough_debug_s.get(), _hough_debug_v.get());
 	DetectorBase::updateHook();
-        if (_frame.read(fp) != RTT::NewData) {
+        if (_frame.readNewest(fp) != RTT::NewData) {
 		return;
 	}
 
