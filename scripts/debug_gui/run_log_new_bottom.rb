@@ -24,7 +24,7 @@ Orocos.run ("buoy_test") do
 
   log.bottom_camera.frame.connect_to detector.frame
 
-  Orocos.conf.apply(detector, ['default'])
+  Orocos.conf.apply(detector, ['bottom_white'])
   detector.configure
   detector.start
 

@@ -161,6 +161,7 @@ void Detector2::updateHook()
 
 	feature::Buoy buoy = feature::Buoy(0,0,-1);
 	current_state = NO_BUOY_FOUND;
+        buoy.color = avalon::feature::NO_BUOY;
 	//wenn die boje gefunden wurde schreibe sie raus
     if (vector.size() > 0 && vector.front().validation>-1) {
         buoy=vector.front();
