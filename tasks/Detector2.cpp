@@ -31,6 +31,7 @@ Detector2::Detector2(std::string const& name, TaskCore::TaskState initial_state)
 	grayframe.reset(new base::samples::frame::Frame());
 	houghframe.reset(new base::samples::frame::Frame());
 	debugframe.reset(new base::samples::frame::Frame());
+        _buoy_color.set(avalon::feature::UNKNOWN);
 }
 
 Detector2::Detector2(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state)
@@ -167,6 +168,7 @@ void Detector2::updateHook()
 		current_state = BUOY_FOUND;
 		//light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
                 light_on = false;
+        buoy.color = _buoy_color.get();
     }
 	_buoy.write(buoy);
 	_light.write(light_on);

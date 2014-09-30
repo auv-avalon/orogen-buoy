@@ -11,8 +11,6 @@
 
 #define GUI_WINDOW_NAME "Buoy Monitor"
 
-int houghTh = 0, edgeTh = 0;
-int buoys_buffer_size=5,buoys_buffer_size_min=3,startvalidation=100,mindist=100;
 
 using namespace avalon;
 using namespace buoy;
@@ -33,6 +31,7 @@ Detector::Detector(std::string const& name, TaskCore::TaskState initial_state)
 	grayframe.reset(new base::samples::frame::Frame());
 	houghframe.reset(new base::samples::frame::Frame());
 	debugframe.reset(new base::samples::frame::Frame());
+        _buoy_color.set(avalon::feature::UNKNOWN);
 }
 
 Detector::Detector(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state)
@@ -75,10 +74,10 @@ bool Detector::startHook()
 	state(current_state);
 
 
-	filter.setBufferSize(buoys_buffer_size);
-    filter.setMinSize(buoys_buffer_size_min);
-    filter.setStartval(startvalidation);
-    filter.setMindist(mindist);
+	filter.setBufferSize(_buoys_buffer_size.get());
+    filter.setMinSize(_buoys_buffer_size_min.get());
+    filter.setStartval(_startvalidation.get());
+    filter.setMindist(_mindist.get());
     filter.setMaxage((double)_filter_timeout,true);
 
 	return true;
@@ -169,6 +168,7 @@ void Detector::updateHook()
 		current_state = BUOY_FOUND;
 		//light_on = detector.findWhiteLight(&image, buoy, feature::WhiteLightSettings(_roi_x,_roi_y,_roi_width,_roi_height,_val_th,_sat_th));
                 light_on = false;
+        buoy.color = _buoy_color.get();
     }
 	_buoy.write(buoy);
 	_light.write(light_on);
