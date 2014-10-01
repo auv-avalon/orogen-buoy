@@ -160,6 +160,7 @@ void Detector2::updateHook()
 	bool light_on = false;
 
 	feature::Buoy buoy = feature::Buoy(0,0,-1);
+        buoy.time = frame.time;
 	current_state = NO_BUOY_FOUND;
         buoy.color = avalon::feature::NO_BUOY;
 	//wenn die boje gefunden wurde schreibe sie raus
