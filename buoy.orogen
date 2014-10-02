@@ -393,8 +393,9 @@ task_context "ServoingOnWall" do
     output_port("aligned_position_cmd", "base::LinearAngular6DCommand")
 
     property("distance_to_buoy", "double", 1)
-    property("angle_to_wall", "double", 0)
+    property("target_heading", "double", 1.57)
     property("heading_step_size", "double", 0.1) 
+    
 
     property("aligned_distance", "double", 0.5)
 

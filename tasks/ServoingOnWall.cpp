@@ -74,6 +74,10 @@ void ServoingOnWall::updateHook()
         }
 
         double heading_step = base::Angle::normalizeRad(base::getYaw(orientation.orientation) + _heading_step_size.get());
+        if(heading_step > _target_heading.get()){
+            heading_step = _target_heading.get();
+        }
+
 
         Eigen::Vector3d buoy_rel_pos_in_world = orientation.orientation * buoy.world_coord;
         Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(heading_step, Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
@@ -89,7 +93,7 @@ void ServoingOnWall::updateHook()
         std::cout << "------------------------------------------------------" << std::endl;
         std::cout << "result:      + " << aligned_cmd.linear.transpose() << std::endl;
         
-        if(world_cmd.linear.norm() < _aligned_distance.get() && state() != ALIGNED){
+        if(world_cmd.linear.norm() < _aligned_distance.get() && base::getYaw(orientation.orientation)  && state() != ALIGNED){
             state(ALIGNED);
         }
 
