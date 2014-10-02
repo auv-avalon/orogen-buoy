@@ -93,7 +93,7 @@ void ServoingOnWall::updateHook()
         std::cout << "------------------------------------------------------" << std::endl;
         std::cout << "result:      + " << aligned_cmd.linear.transpose() << std::endl;
         
-        if(world_cmd.linear.norm() < _aligned_distance.get() && base::getYaw(orientation.orientation)  && state() != ALIGNED){
+        if(world_cmd.linear.norm() < _aligned_distance.get() && base::getYaw(orientation.orientation) + 0.1 >= _target_heading.get()  && state() != ALIGNED){
             state(ALIGNED);
         }
 
