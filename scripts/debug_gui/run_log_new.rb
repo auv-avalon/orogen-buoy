@@ -17,7 +17,7 @@ if ARGV.size < 1
   exit 1
 end
 Orocos.run ("buoy_test") do
-  #Orocos.log_all_ports
+ # Orocos.log_all_ports
   Orocos.conf.load_dir("#{ENV['AUTOPROJ_CURRENT_ROOT']}/bundles/auv/config/orogen/")
   detector = Orocos::TaskContext.get "buoy_detector"
   log = Orocos::Log::Replay.open(ARGV[0], Typelib::Registry.new)

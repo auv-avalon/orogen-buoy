@@ -28,6 +28,7 @@ namespace buoy {
         
         sonar_detectors::Wall wall_on_buoy_detection;
         double last_buoy_validation;
+        double start_heading;
 
 
     public:

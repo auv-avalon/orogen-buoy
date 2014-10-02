@@ -69,11 +69,14 @@ void ServoingOnWall::updateHook()
     if(buoy.validation > 0.8){
         if(last_buoy_validation < 0.8 && state() != BUOY_SERVOING && state() != ALIGNED){
             wall_on_buoy_detection = wall;
+                start_heading = base::getYaw(orientation.orientation);
             state(BUOY_SERVOING);
         }
 
+        double heading_step = base::Angle::normalizeRad(base::getYaw(orientation.orientation) + _heading_step_size.get());
+
         Eigen::Vector3d buoy_rel_pos_in_world = orientation.orientation * buoy.world_coord;
-        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(wall_on_buoy_detection.wall_angle - (M_PI) + _angle_to_wall.get(), Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
+        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(heading_step, Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
         
         buoy.world_coord[0] = buoy.world_coord[0] - 0.8;
 

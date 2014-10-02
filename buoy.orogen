@@ -394,6 +394,7 @@ task_context "ServoingOnWall" do
 
     property("distance_to_buoy", "double", 1)
     property("angle_to_wall", "double", 0)
+    property("heading_step_size", "double", 0.1) 
 
     property("aligned_distance", "double", 0.5)
 
