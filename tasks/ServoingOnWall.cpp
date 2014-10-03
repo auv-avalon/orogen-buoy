@@ -80,7 +80,7 @@ void ServoingOnWall::updateHook()
 
 
         Eigen::Vector3d buoy_rel_pos_in_world = orientation.orientation * buoy.world_coord;
-        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(heading_step, Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(_distance_to_buoy.get(),0,0));
+        Eigen::Vector3d buoy_offset = orientation.orientation.inverse() * (Eigen::AngleAxisd(heading_step, Eigen::Vector3d::UnitZ()) * Eigen::Vector3d(-(_distance_to_buoy.get()),0,0));
         
         buoy.world_coord[0] = buoy.world_coord[0] - 0.8;
 
